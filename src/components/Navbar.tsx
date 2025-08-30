@@ -22,7 +22,7 @@ export default function Navbar() {
           </div>
           <div className="space-y-1.5">
             <h1 className="text-lg font-bold">SpotifyWidget</h1>
-            <p>GitHub README Integration</p>
+            <p className="text-xs">GitHub README Integration</p>
           </div>
         </div>
 
