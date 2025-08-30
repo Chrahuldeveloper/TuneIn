@@ -93,7 +93,6 @@ export default function Home() {
               anywhere else.
             </p>
 
-            {/* Buttons */}
             <div className="flex justify-center items-center space-x-5">
               <div className="relative inline-block">
                 <div className="absolute -inset-1 rounded-lg bg-green-500 blur-2xl opacity-70 animate-pulse"></div>
@@ -108,7 +107,7 @@ export default function Home() {
                 ) : (
                   <div className="relative bg-green-600 text-white px-6 py-3 text-xl rounded-lg font-semibold flex items-center space-x-3">
                     <CiMusicNote1 size={24} />
-                    <span>{user?.display_name || "Connected!"}</span>
+                    <span>{user?.display_name}</span>
                   </div>
                 )}
               </div>
