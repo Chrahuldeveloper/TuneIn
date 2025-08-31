@@ -33,7 +33,6 @@ export default function Dashboard() {
       const data = await res.json();
       setToken(data.access_token);
       localStorage.setItem("spotify_token", data.access_token);
-
       window.history.replaceState({}, document.title, "/dashboard");
     } else {
       const storedToken = localStorage.getItem("spotify_token");
@@ -51,16 +50,19 @@ export default function Dashboard() {
     try {
       const userRes = await fetch("https://api.spotify.com/v1/me", {
         headers: { Authorization: `Bearer ${token}` },
-      }).then((res) => res.json());
-      setUser(userRes);
+      });
+
+      const userResponse = await userRes.json();
+      setUser(userResponse);
 
       const playlistsRes = await fetch(
         "https://api.spotify.com/v1/me/playlists",
         {
           headers: { Authorization: `Bearer ${token}` },
         }
-      ).then((res) => res.json());
-      setPlaylists(playlistsRes.items || []);
+      );
+      const playlistsResponse = await playlistsRes.json();
+      setPlaylists(playlistsResponse.items || []);
 
       const trackRes = await fetch(
         "https://api.spotify.com/v1/me/player/currently-playing",

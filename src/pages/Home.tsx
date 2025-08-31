@@ -8,12 +8,15 @@ const CLIENT_ID = import.meta.env.VITE_CLIENT_ID;
 const REDIRECT_URI = import.meta.env.VITE_REDIRECT_URI;
 const AUTH_ENDPOINT = "https://accounts.spotify.com/authorize";
 
-  var SCOPE = 'user-read-private user-read-email user-read-recently-played user-read-currently-playing';
+// Read https://developer.spotify.com/documentation/web-api/reference/get-the-users-currently-playing-track
+var SCOPE =
+  "user-read-private user-read-email user-read-recently-played user-read-currently-playing";
 
 export default function Home() {
   const [token, setToken] = useState<string | null>(null);
   const [user, setUser] = useState<any>(null);
 
+  // Read : https://developer.spotify.com/documentation/web-api/tutorials/code-pkce-flow
   const generateRandomString = (length: number) => {
     const possible =
       "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -23,6 +26,7 @@ export default function Home() {
       .join("");
   };
 
+  // Read : https://developer.spotify.com/documentation/web-api/tutorials/code-pkce-flow
   const generateCodeChallenge = async (verifier: string) => {
     const encoder = new TextEncoder();
     const data = encoder.encode(verifier);
@@ -38,7 +42,7 @@ export default function Home() {
     const codeChallenge = await generateCodeChallenge(codeVerifier);
 
     localStorage.setItem("code_verifier", codeVerifier);
-    localStorage.removeItem("spotify_token"); 
+    localStorage.removeItem("spotify_token");
 
     const params = new URLSearchParams({
       response_type: "code",
@@ -57,14 +61,26 @@ export default function Home() {
     if (storedToken) setToken(storedToken);
   }, []);
 
+  const getData = async (token: string) => {
+    try {
+      if (!token) {
+        return;
+      }
+      const getUser = await fetch("https://api.spotify.com/v1/me", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const res = await getUser.json();
+      setUser(res);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     if (token) {
-      fetch("https://api.spotify.com/v1/me", {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-        .then((res) => res.json())
-        .then(setUser)
-        .catch(console.error);
+      getData(token?.toString());
     }
   }, [token]);
 
