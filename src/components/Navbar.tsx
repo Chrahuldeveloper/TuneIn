@@ -2,6 +2,7 @@ import { useState } from "react";
 import { CiHome, CiMusicNote1, CiMenuFries } from "react-icons/ci";
 import { LuLayoutDashboard } from "react-icons/lu";
 import { CgProfile } from "react-icons/cg";
+import { Link } from "react-router-dom";
 
 export default function Navbar() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -41,10 +42,12 @@ export default function Navbar() {
               <CiHome size={23} />
               <p>Home</p>
             </li>
-            <li className="cursor-pointer flex items-center space-x-3">
-              <LuLayoutDashboard size={23} />
-              <p>DashBoard</p>
-            </li>
+            <Link to={"/dashboard"}>
+              <li className="cursor-pointer flex items-center space-x-3">
+                <LuLayoutDashboard size={23} />
+                <p>DashBoard</p>
+              </li>
+            </Link>
             <li className="cursor-pointer flex items-center space-x-3">
               <CgProfile size={23} />
               <p>Account</p>
@@ -62,7 +65,7 @@ export default function Navbar() {
 
           <div className="fixed top-0 left-0 w-64 h-full bg-[#1f2329] z-30 p-5 flex flex-col space-y-10">
             <button
-              className="text-white mb-5 self-end cursor-pointer" 
+              className="text-white mb-5 self-end cursor-pointer"
               onClick={() => setSidebarOpen(false)}
             >
               ✕

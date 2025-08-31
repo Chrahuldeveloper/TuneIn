@@ -1,7 +1,13 @@
 import { useEffect, useState } from "react";
+import { Navbar } from "../components";
 
 const CLIENT_ID = import.meta.env.VITE_CLIENT_ID;
 const REDIRECT_URI = import.meta.env.VITE_REDIRECT_URI;
+import { IoColorPaletteOutline } from "react-icons/io5";
+import { FaRegChartBar } from "react-icons/fa";
+import { IoCodeSlashOutline } from "react-icons/io5";
+import { AiOutlineThunderbolt } from "react-icons/ai";
+import { FaRegEye } from "react-icons/fa";
 
 export default function Dashboard() {
   const [token, setToken] = useState<string | null>(null);
@@ -90,8 +96,93 @@ export default function Dashboard() {
   }, [token]);
 
   return (
-    <div className="text-black text-center mt-20">
-      {user ? (
+    <div className=" bg-[#111216] w-full h-[100vh] overflow-y-none ">
+      <Navbar />
+
+      <div className="text-center my-10 space-y-5">
+        <h1 className="text-2xl font-bold text-white md:text-3xl">Dashboard</h1>
+        <p className="text-lg font-semibold text-[#989fab]">
+          Customize your Spotify widget and generate embed code
+        </p>
+      </div>
+
+      <div>
+        <div className="bg-[#111216] w-full  flex justify-center items-center p-6">
+          <div className="w-full max-w-6xl grid grid-cols-1 md:grid-cols-2 gap-6 ">
+            <div className="space-y-4 bg-[#1f2228] p-5 rounded-lg">
+              <div className="flex items-center space-x-3">
+                <IoColorPaletteOutline size={25} color="#00a63e" />
+                <h1 className="text-white font-semibold">Widget Style</h1>
+              </div>
+              <div className="hover:border-green-500 border-[1px] transition-colors cursor-pointer rounded-lg border border-[#2a2d34] px-4 py-5 flex items-center justify-between">
+                <div className="flex items-center space-x-3.5">
+                  <FaRegChartBar size={25} color="#00a63e" />
+                  <div>
+                    <h2 className="text-white font-semibold">Compact Card</h2>
+                    <p className="text-[#989fab] text-sm">
+                      Clean and minimal design
+                    </p>
+                  </div>
+                </div>
+                <span className="text-[#989fab] text-sm">120×80px</span>
+              </div>
+
+              <div className="hover:border-green-500 border-[1px] transition-colors cursor-pointer rounded-lg border border-[#2a2d34] px-4 py-5 flex items-center justify-between">
+                <div className="flex items-center space-x-3.5">
+                  <IoCodeSlashOutline size={25} color="#00a63e" />
+                  <div>
+                    <h2 className="text-white font-semibold">Banner Style</h2>
+                    <p className="text-[#989fab] text-sm">
+                      Wide horizontal layout
+                    </p>
+                  </div>
+                </div>
+                <span className="text-[#989fab] text-sm">400×120px</span>
+              </div>
+
+              <div className="hover:border-green-500 border-[1px] transition-colors cursor-pointer rounded-lg border border-[#2a2d34] px-4 py-5 flex items-center justify-between">
+                <div className="flex items-center space-x-3.5">
+                  <AiOutlineThunderbolt size={25} color="#00a63e" />
+                  <div>
+                    <h2 className="text-white font-semibold">Waveform</h2>
+                    <p className="text-[#989fab] my-2 text-sm">
+                      Animated audio visualization
+                    </p>
+                  </div>
+                </div>
+                <span className="text-[#989fab] text-sm">300×150px</span>
+              </div>
+            </div>
+
+            <div className="bg-[#1a1b20] rounded-lg border border-[#2a2d34] p-6 flex flex-col justify-center items-center">
+              <div className="flex justify-between w-full mb-6">
+                <h2 className="text-white font-semibold">Live Preview</h2>
+                <span className="text-green-400 text-xs bg-[#1f2b1f] px-2 py-1 rounded-md">
+                  waveform
+                </span>
+              </div>
+
+              <div className="bg-[#111216] rounded-lg border border-[#2a2d34] w-full h-48 flex flex-col justify-center items-center space-y-3">
+                <div className="w-12 h-12 rounded-lg bg-green-600 flex items-center justify-center">
+                  <FaRegEye size={25} color="black" />
+                </div>
+                <p className="text-[#989fab] text-sm text-center my-3">
+                  Your waveform style widget will appear here
+                </p>
+                <p className="text-[#989fab] text-xs">
+                  Connect your Spotify account to see real data
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+{
+  /* {user ? (
         <>
           <h1 className="text-3xl font-bold">
             Welcome, {user.display_name} 🎵
@@ -121,7 +212,5 @@ export default function Dashboard() {
         </>
       ) : (
         <h1 className="text-2xl">Loading your Spotify profile...</h1>
-      )}
-    </div>
-  );
+      )} */
 }

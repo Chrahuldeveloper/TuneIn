@@ -4,7 +4,7 @@ import { FaPlay } from "react-icons/fa";
 
 const Readme = () => {
   return (
-    <div className="my-10 ">
+    <div className="my-10">
       <motion.div
         className="w-full  max-w-3xl mx-auto bg-[#0d1117] rounded-2xl shadow-lg border border-gray-800 p-7 relative "
         initial={{ opacity: 0, y: 20 }}
