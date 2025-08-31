@@ -96,7 +96,7 @@ export default function Dashboard() {
   }, [token]);
 
   return (
-    <div className=" bg-[#111216] w-full h-[100vh] overflow-y-none ">
+    <div className=" bg-[#111216] w-full h-screen  overflow-y-none ">
       <Navbar />
 
       <div className="text-center my-10 space-y-5">
@@ -107,7 +107,7 @@ export default function Dashboard() {
       </div>
 
       <div>
-        <div className="bg-[#111216] w-full  flex justify-center items-center p-6">
+        <div className="bg-[#111216] w-full  flex justify-center  p-6">
           <div className="w-full max-w-6xl grid grid-cols-1 md:grid-cols-2 gap-6 ">
             <div className="space-y-4 bg-[#1f2228] p-5 rounded-lg">
               <div className="flex items-center space-x-3">
@@ -154,15 +154,12 @@ export default function Dashboard() {
               </div>
             </div>
 
-            <div className="bg-[#1a1b20] rounded-lg border border-[#2a2d34] p-6 flex flex-col justify-center items-center">
-              <div className="flex justify-between w-full mb-6">
-                <h2 className="text-white font-semibold">Live Preview</h2>
-                <span className="text-green-400 text-xs bg-[#1f2b1f] px-2 py-1 rounded-md">
-                  waveform
-                </span>
+            <div className="bg-[#1a1b20] rounded-lg border border-[#2a2d34] p-4 flex flex-col justify-start space-y-8">
+              <div className="flex items-center space-x-3.5">
+                <IoColorPaletteOutline size={25} color="#00a63e" />
+                <h1 className="text-white font-semibold">Live Preview</h1>
               </div>
-
-              <div className="bg-[#111216] rounded-lg border border-[#2a2d34] w-full h-48 flex flex-col justify-center items-center space-y-3">
+              <div className="bg-[#111216] rounded-lg  w-full h-48 flex flex-col justify-center items-center space-y-3">
                 <div className="w-12 h-12 rounded-lg bg-green-600 flex items-center justify-center">
                   <FaRegEye size={25} color="black" />
                 </div>
