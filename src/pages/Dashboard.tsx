@@ -10,37 +10,34 @@ export default function Dashboard() {
   const [currentTrack, setCurrentTrack] = useState<any>(null);
 
   const getToken = async () => {
-    try {
-      const params = new URLSearchParams(window.location.search);
-      const code = params.get("code");
-      if (code) {
-        const codeVerifier = localStorage.getItem("code_verifier");
+    const params = new URLSearchParams(window.location.search);
+    const code = params.get("code");
 
-        const body = new URLSearchParams({
-          client_id: CLIENT_ID,
-          grant_type: "authorization_code",
-          code: code,
-          redirect_uri: REDIRECT_URI,
-          code_verifier: codeVerifier || "",
-        });
+    if (code) {
+      const codeVerifier = localStorage.getItem("code_verifier") || "";
 
-        const res = await fetch("https://accounts.spotify.com/api/token", {
-          method: "POST",
-          headers: { "Content-Type": "application/x-www-form-urlencoded" },
-          body: body.toString(),
-        });
+      const body = new URLSearchParams({
+        client_id: CLIENT_ID,
+        grant_type: "authorization_code",
+        code: code,
+        redirect_uri: REDIRECT_URI,
+        code_verifier: codeVerifier,
+      });
 
-        const data = await res.json();
-        setToken(data.access_token);
-        localStorage.setItem("spotify_token", data.access_token);
-        localStorage.setItem("spotify_token", data.access_token);
-        window.history.replaceState({}, document.title, "/dashboard");
-      } else {
-        const storedToken = localStorage.getItem("spotify_token");
-        if (storedToken) setToken(storedToken);
-      }
-    } catch (error) {
-      console.log(error);
+      const res = await fetch("https://accounts.spotify.com/api/token", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: body.toString(),
+      });
+
+      const data = await res.json();
+      setToken(data.access_token);
+      localStorage.setItem("spotify_token", data.access_token);
+
+      window.history.replaceState({}, document.title, "/dashboard");
+    } else {
+      const storedToken = localStorage.getItem("spotify_token");
+      if (storedToken) setToken(storedToken);
     }
   };
 
@@ -49,37 +46,45 @@ export default function Dashboard() {
   }, []);
 
   const getData = async (token: string) => {
+    if (!token) return;
+
     try {
-      if (!token) {
-        return;
-      }
-
-      const userData = await fetch("https://api.spotify.com/v1/me", {
+      const userRes = await fetch("https://api.spotify.com/v1/me", {
         headers: { Authorization: `Bearer ${token}` },
-      });
-
-      const userRes = await userData.json();
+      }).then((res) => res.json());
       setUser(userRes);
 
-      const getUserPlayList = await fetch(
+      const playlistsRes = await fetch(
         "https://api.spotify.com/v1/me/playlists",
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      ).then((res) => res.json());
+      setPlaylists(playlistsRes.items || []);
+
+      const trackRes = await fetch(
+        "https://api.spotify.com/v1/me/player/currently-playing",
         {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
 
-      const userPlayListRes = await getUserPlayList.json();
-      setPlaylists(userPlayListRes.items || []);
-      console.log(userPlayListRes);
+      if (trackRes.status === 204) {
+        setCurrentTrack(null);
+      } else if (trackRes.status === 401) {
+        console.error("Token missing permission");
+      } else {
+        const data = await trackRes.json();
+        console.log(data);
+        setCurrentTrack(data);
+      }
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
 
   useEffect(() => {
-    if (token) {
-      getData(token?.toString());
-    }
+    if (token) getData(token);
   }, [token]);
 
   return (
@@ -91,7 +96,6 @@ export default function Dashboard() {
           </h1>
           <p>Email: {user.email}</p>
 
-          {/* Currently Playing */}
           {currentTrack && currentTrack.item ? (
             <div className="mt-6">
               <h2 className="text-xl font-semibold">Currently Playing 🎧</h2>
@@ -104,7 +108,6 @@ export default function Dashboard() {
             <p className="mt-6">No song playing right now</p>
           )}
 
-          {/* Playlists */}
           <div className="mt-10">
             <h2 className="text-xl font-semibold">Your Playlists 📂</h2>
             <ul className="mt-4 space-y-2">
