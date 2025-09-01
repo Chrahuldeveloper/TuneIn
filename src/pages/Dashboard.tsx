@@ -119,7 +119,7 @@ export default function Dashboard() {
 
     if (selectedStyle === "compact") {
       return (
-        <div className="bg-[#1f2228]  p-4 rounded-lg w-96 flex justify-between items-center">
+        <div className="bg-[#1f2228]  p-4 rounded-lg w-96 flex justify-between items-center shawdow-xl">
           <div>
             <div className="flex items-center space-x-3">
               <img
@@ -149,7 +149,7 @@ export default function Dashboard() {
 
     if (selectedStyle === "banner") {
       return (
-        <div className="bg-[#1f2228] p-5 rounded-lg w-96">
+        <div className="bg-[#1f2228] p-5 rounded-lg w-96 shawdow-xl">
           <div className="flex items-center space-x-4">
             <img
               src={albumArt}
@@ -181,7 +181,7 @@ export default function Dashboard() {
 
     if (selectedStyle === "waveform") {
       return (
-        <div className="bg-[#1f2228] p-4 rounded-lg w-96 p-5">
+        <div className="bg-[#1f2228] p-4 rounded-lg w-96 p-5 shawdow-xl">
           <div className="flex items-center  space-x-5">
             <img
               src={albumArt}
@@ -216,92 +216,108 @@ export default function Dashboard() {
   };
 
   return (
-    <div className=" bg-[#111216] w-full min-h-screen overflow-y-auto">
-      <Navbar />
+    <div className="  w-full h-screen overflow-y-none">
+      <div className=" bg-[#111216] h-[110vh] overflow-y-none">
+        <Navbar />
 
-      <div className="text-center my-10 space-y-5">
-        <h1 className="text-2xl font-bold text-white md:text-3xl">Dashboard</h1>
-        <p className="text-lg font-semibold text-[#989fab]">
-          Customize your Spotify widget and generate embed code
-        </p>
-      </div>
+        <div className="text-center my-10 space-y-5">
+          <h1 className="text-2xl font-bold text-white md:text-3xl">
+            Dashboard
+          </h1>
+          <p className="text-lg font-semibold text-[#989fab]">
+            Customize your Spotify widget and generate embed code
+          </p>
+        </div>
 
-      <div className="bg-[#111216] w-full flex justify-center p-6">
-        <div className="w-full max-w-6xl grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="space-y-4 bg-[#1f2228] p-5 rounded-lg">
-            <div className="flex items-center space-x-3">
-              <IoColorPaletteOutline size={25} color="#00a63e" />
-              <h1 className="text-white font-semibold">Widget Style</h1>
-            </div>
-
-            <div
-              onClick={() => setSelectedStyle("compact")}
-              className={`border-[1px] transition-colors cursor-pointer rounded-lg px-4 py-5 flex items-center justify-between ${
-                selectedStyle === "compact"
-                  ? "border-green-500"
-                  : "border-[#2a2d34]"
-              }`}
-            >
-              <div className="flex items-center space-x-3.5">
-                <FaRegChartBar size={25} color="#00a63e" />
-                <div>
-                  <h2 className="text-white font-semibold">Compact Card</h2>
-                  <p className="text-[#989fab] text-sm">
-                    Clean and minimal design
-                  </p>
-                </div>
-              </div>
-              <span className="text-[#989fab] text-sm">120×80px</span>
-            </div>
-
-            <div
-              onClick={() => setSelectedStyle("banner")}
-              className={`border-[1px] transition-colors cursor-pointer rounded-lg px-4 py-5 flex items-center justify-between ${
-                selectedStyle === "banner"
-                  ? "border-green-500"
-                  : "border-[#2a2d34]"
-              }`}
-            >
-              <div className="flex items-center space-x-3.5">
-                <IoCodeSlashOutline size={25} color="#00a63e" />
-                <div>
-                  <h2 className="text-white font-semibold">Banner Style</h2>
-                  <p className="text-[#989fab] text-sm">
-                    Wide horizontal layout
-                  </p>
-                </div>
-              </div>
-              <span className="text-[#989fab] text-sm">400×120px</span>
-            </div>
-
-            <div
-              onClick={() => setSelectedStyle("waveform")}
-              className={`border-[1px] transition-colors cursor-pointer rounded-lg px-4 py-5 flex items-center justify-between ${
-                selectedStyle === "waveform"
-                  ? "border-green-500"
-                  : "border-[#2a2d34]"
-              }`}
-            >
-              <div className="flex items-center space-x-3.5">
-                <AiOutlineThunderbolt size={25} color="#00a63e" />
-                <div>
-                  <h2 className="text-white font-semibold">Waveform</h2>
-                  <p className="text-[#989fab] text-sm">
-                    Animated audio visualization
-                  </p>
-                </div>
-              </div>
-              <span className="text-[#989fab] text-sm">300×150px</span>
-            </div>
+        <div className="bg-[#1f2228] flex flex-col gap-5 max-w-4xl mx-auto justify-center p-5 rounded-lg  text-slate-300 my-5">
+          <div className="flex items-center space-x-3">
+            <IoCodeSlashOutline size={25} color="#00a63e" />
+            <h1 className="text-2xl font-semibold">Embed Code</h1>
           </div>
+          [![Spotify](https://spotify-widget.vercel.app/api?style=compact)](https://open.spotify.com/user/yourusername)
+          <p className="text-slate-200 text-xs font-semibold">
+            Paste this markdown code into your GitHub README or any markdown
+            file
+          </p>
+        </div>
 
-          <div className="bg-[#1a1b20] rounded-lg border border-[#2a2d34] p-4 flex flex-col justify-start space-y-8">
-            <div className="flex items-center space-x-3.5">
-              <IoColorPaletteOutline size={25} color="#00a63e" />
-              <h1 className="text-white font-semibold">Live Preview</h1>
+        <div className="bg-[#111216] w-full flex justify-center p-6">
+          <div className="w-full max-w-6xl grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-4 bg-[#1f2228] p-5 rounded-lg">
+              <div className="flex items-center space-x-3">
+                <IoColorPaletteOutline size={25} color="#00a63e" />
+                <h1 className="text-white font-semibold">Widget Style</h1>
+              </div>
+
+              <div
+                onClick={() => setSelectedStyle("compact")}
+                className={`border-[1px] transition-colors cursor-pointer rounded-lg px-4 py-5 flex items-center justify-between ${
+                  selectedStyle === "compact"
+                    ? "border-green-500"
+                    : "border-[#2a2d34]"
+                }`}
+              >
+                <div className="flex items-center space-x-3.5">
+                  <FaRegChartBar size={25} color="#00a63e" />
+                  <div>
+                    <h2 className="text-white font-semibold">Compact Card</h2>
+                    <p className="text-[#989fab] text-sm">
+                      Clean and minimal design
+                    </p>
+                  </div>
+                </div>
+                <span className="text-[#989fab] text-sm">View</span>
+              </div>
+
+              <div
+                onClick={() => setSelectedStyle("banner")}
+                className={`border-[1px] transition-colors cursor-pointer rounded-lg px-4 py-5 flex items-center justify-between ${
+                  selectedStyle === "banner"
+                    ? "border-green-500"
+                    : "border-[#2a2d34]"
+                }`}
+              >
+                <div className="flex items-center space-x-3.5">
+                  <IoCodeSlashOutline size={25} color="#00a63e" />
+                  <div>
+                    <h2 className="text-white font-semibold">Banner Style</h2>
+                    <p className="text-[#989fab] text-sm">
+                      Wide horizontal layout
+                    </p>
+                  </div>
+                </div>
+                <span className="text-[#989fab] text-sm">View</span>
+              </div>
+
+              <div
+                onClick={() => setSelectedStyle("waveform")}
+                className={`border-[1px] transition-colors cursor-pointer rounded-lg px-4 py-5 flex items-center justify-between ${
+                  selectedStyle === "waveform"
+                    ? "border-green-500"
+                    : "border-[#2a2d34]"
+                }`}
+              >
+                <div className="flex items-center space-x-3.5">
+                  <AiOutlineThunderbolt size={25} color="#00a63e" />
+                  <div>
+                    <h2 className="text-white font-semibold">Waveform</h2>
+                    <p className="text-[#989fab] text-sm">
+                      Animated audio visualization
+                    </p>
+                  </div>
+                </div>
+                <span className="text-[#989fab] text-sm">View</span>
+              </div>
             </div>
-            <div className="flex justify-center items-center min-h-[200px]">
-              {renderPreview()}
+
+            <div className="bg-[#1a1b20] rounded-lg border border-[#2a2d34] p-4 flex flex-col justify-start space-y-8">
+              <div className="flex items-center space-x-3.5">
+                <IoColorPaletteOutline size={25} color="#00a63e" />
+                <h1 className="text-white font-semibold">Live Preview</h1>
+              </div>
+              <div className="flex justify-center items-center min-h-[200px]">
+                {renderPreview()}
+              </div>
             </div>
           </div>
         </div>
