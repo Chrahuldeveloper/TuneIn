@@ -13,6 +13,7 @@ import { FaRegChartBar, FaRegEye, FaRegHeart } from "react-icons/fa";
 import { AiOutlineThunderbolt } from "react-icons/ai";
 import { CiMusicNote1 } from "react-icons/ci";
 import { MdSkipNext } from "react-icons/md";
+import { FaRegCopy } from "react-icons/fa6";
 
 export default function Dashboard() {
   const [token, setToken] = useState<string | null>(null);
@@ -23,6 +24,21 @@ export default function Dashboard() {
     "compact" | "banner" | "waveform" | null
   >(null);
 
+  console.log(selectedStyle)
+
+  const [readMeLink, setreadMeLink] = useState<string | null>(null)
+
+
+
+  useEffect(() => {
+    if (selectedStyle) {
+      setreadMeLink(`http://127.0.0.1:8000/username/widget/${selectedStyle}`);
+    }
+  }, [selectedStyle]);
+
+
+  console.log(readMeLink)
+
   const getToken = async () => {
     const params = new URLSearchParams(window.location.search);
     const code = params.get("code");
@@ -32,6 +48,7 @@ export default function Dashboard() {
 
       const body = new URLSearchParams({
         client_id: CLIENT_ID,
+
         grant_type: "authorization_code",
         code: code,
         redirect_uri: REDIRECT_URI,
@@ -101,6 +118,25 @@ export default function Dashboard() {
     if (token) getData(token);
   }, [token]);
 
+
+
+
+  const copyLink = async () => {
+    try {
+
+      await navigator.clipboard.writeText(readMeLink!)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+
+
+
+
+  console.log(user)
+  console.log(currentTrack)
+
   const renderPreview = () => {
     if (!selectedStyle) {
       return (
@@ -108,6 +144,7 @@ export default function Dashboard() {
           <FaRegEye size={40} className="mb-2" />
           <p>Select a widget style to preview</p>
         </div>
+
       );
     }
 
@@ -230,11 +267,16 @@ export default function Dashboard() {
         </div>
 
         <div className="bg-[#1f2228] flex flex-col gap-5 max-w-4xl mx-auto justify-center p-5 rounded-lg  text-slate-300 my-5">
-          <div className="flex items-center space-x-3">
-            <IoCodeSlashOutline size={25} color="#00a63e" />
-            <h1 className="text-2xl font-semibold">Embed Code</h1>
+          <div className="flex justify-between items-center">
+            <div className="flex items-center space-x-3">
+              <IoCodeSlashOutline size={25} color="#00a63e" />
+              <h1 className="text-2xl font-semibold">Embed Code</h1>
+            </div>
+            <div>
+              <FaRegCopy cursor={"pointer"} onClick={copyLink} />
+            </div>
           </div>
-          [![Spotify](https://spotify-widget.vercel.app/api?style=compact)](https://open.spotify.com/user/yourusername)
+          {readMeLink}
           <p className="text-slate-200 text-xs font-semibold">
             Paste this markdown code into your GitHub README or any markdown
             file
@@ -251,11 +293,10 @@ export default function Dashboard() {
 
               <div
                 onClick={() => setSelectedStyle("compact")}
-                className={`border-[1px] transition-colors cursor-pointer rounded-lg px-4 py-5 flex items-center justify-between ${
-                  selectedStyle === "compact"
-                    ? "border-green-500"
-                    : "border-[#2a2d34]"
-                }`}
+                className={`border-[1px] transition-colors cursor-pointer rounded-lg px-4 py-5 flex items-center justify-between ${selectedStyle === "compact"
+                  ? "border-green-500"
+                  : "border-[#2a2d34]"
+                  }`}
               >
                 <div className="flex items-center space-x-3.5">
                   <FaRegChartBar size={25} color="#00a63e" />
@@ -271,11 +312,10 @@ export default function Dashboard() {
 
               <div
                 onClick={() => setSelectedStyle("banner")}
-                className={`border-[1px] transition-colors cursor-pointer rounded-lg px-4 py-5 flex items-center justify-between ${
-                  selectedStyle === "banner"
-                    ? "border-green-500"
-                    : "border-[#2a2d34]"
-                }`}
+                className={`border-[1px] transition-colors cursor-pointer rounded-lg px-4 py-5 flex items-center justify-between ${selectedStyle === "banner"
+                  ? "border-green-500"
+                  : "border-[#2a2d34]"
+                  }`}
               >
                 <div className="flex items-center space-x-3.5">
                   <IoCodeSlashOutline size={25} color="#00a63e" />
@@ -291,11 +331,10 @@ export default function Dashboard() {
 
               <div
                 onClick={() => setSelectedStyle("waveform")}
-                className={`border-[1px] transition-colors cursor-pointer rounded-lg px-4 py-5 flex items-center justify-between ${
-                  selectedStyle === "waveform"
-                    ? "border-green-500"
-                    : "border-[#2a2d34]"
-                }`}
+                className={`border-[1px] transition-colors cursor-pointer rounded-lg px-4 py-5 flex items-center justify-between ${selectedStyle === "waveform"
+                  ? "border-green-500"
+                  : "border-[#2a2d34]"
+                  }`}
               >
                 <div className="flex items-center space-x-3.5">
                   <AiOutlineThunderbolt size={25} color="#00a63e" />
