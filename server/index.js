@@ -1,14 +1,14 @@
 const express = require("express");
 const db = require("./dbconfig/connectDb");
 const cors = require("cors");
-const saveuserroute = require("./routes/saveUser");
+const saveuserRouter = require("./routes/saveUser");
 
 const app = express();
 const PORT = 3001;
 
 app.use(cors());
 app.use(express.json());
-app.use("/", saveuserroute);
+app.use("/", saveuserRouter);
 
 const createUsersTable = async () => {
   try {
@@ -17,6 +17,7 @@ const createUsersTable = async () => {
         id SERIAL PRIMARY KEY,
         name VARCHAR(100) NOT NULL,
         email VARCHAR(150) UNIQUE NOT NULL,
+        current_song JSONB,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       );
     `;

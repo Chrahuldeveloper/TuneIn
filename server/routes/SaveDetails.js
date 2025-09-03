@@ -1,14 +1,14 @@
 const { Router } = require("express");
 const saveuserRouter = Router();
-const dbclient = require("../dbconfig/connectDb")
+const dbclient = require("../dbconfig/connectDb");
 saveuserRouter.post("/api/save", async (req, res) => {
   try {
     const { name, email } = req.body;
 
-    await dbclient.query(
-      "INSERT INTO users (name, email) VALUES ($1, $2)",
-      [name, email]
-    );
+    await dbclient.query("INSERT INTO users (name, email) VALUES ($1, $2)", [
+      name,
+      email,
+    ]);
 
     res.status(201).json({ message: "✅ User saved successfully" });
   } catch (error) {
@@ -17,4 +17,4 @@ saveuserRouter.post("/api/save", async (req, res) => {
   }
 });
 
-module.exports = saveuserRouter;
+module.exports = saveuserRouter 
