@@ -21,7 +21,7 @@ const createUsersTable = async () => {
       );
     `;
     await db.query(query);
-    console.log("✅ Users table created");
+    console.log("Users table created");
   } catch (error) {
     console.log(error);
   }
