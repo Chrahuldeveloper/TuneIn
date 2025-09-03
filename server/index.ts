@@ -1,13 +1,16 @@
 const express = require("express");
-const { db } = require("./dbconfig/connectDb");
+const db = require("./dbconfig/connectDb");
+const cors = require("cors");
+const saveuserroute = require("./routes/saveUser");
+
 const app = express();
 const PORT = 3001;
-const cors = require("cors");
 
 app.use(cors());
 app.use(express.json());
+app.use("/", saveuserroute);
 
-const createUsers = async () => {
+const createUsersTable = async () => {
   try {
     const query = `
       CREATE TABLE IF NOT EXISTS users (
@@ -25,6 +28,6 @@ const createUsers = async () => {
 };
 
 app.listen(PORT, () => {
-  console.log("server connected");
-  createUsers();
+  console.log("🚀 Server running on http://localhost:" + PORT);
+  createUsersTable();
 });
