@@ -4,7 +4,8 @@ const dbclient = require("../dbconfig/connectDb");
 saveDetailsRouter.post("/api/save", async (req, res) => {
   try {
     const { name, email } = req.body;
-    await dbclient.query("INSERT INTO users (name, email) VALUES ($1, $2)", [
+    await dbclient.query(  `INSERT INTO users (name, email) VALUES ($1, $2)
+   ON CONFLICT (email) DO NOTHING`, [
       name,
       email,
     ]);
@@ -15,5 +16,20 @@ saveDetailsRouter.post("/api/save", async (req, res) => {
   }
 });
 
+saveDetailsRouter.post("/api/savesong", async (req, res) => {
+  try {
+    const { email, songDetails } = req.body;
+
+    await dbclient.query(
+  "UPDATE users SET current_song = $1 WHERE email = $2",
+  [JSON.stringify(songDetails), email]  
+);
+
+    console.log("Song Saved ")
+
+  } catch (error) {
+    console.log(error);
+  }
+});
 
 module.exports = saveDetailsRouter;
