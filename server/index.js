@@ -1,14 +1,14 @@
 const express = require("express");
 const db = require("./dbconfig/connectDb");
 const cors = require("cors");
-const saveuserRouter = require("./routes/SaveDetails");
+const saveDetailsRouter = require("./routes/SaveDetails");
 
 const app = express();
 const PORT = 3001;
 
 app.use(cors());
 app.use(express.json());
-app.use("/", saveuserRouter);
+app.use("/", saveDetailsRouter);
 
 const createUsersTable = async () => {
   try {
