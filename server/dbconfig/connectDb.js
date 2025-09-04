@@ -1,5 +1,4 @@
-import { Pool } from "pg";
-
+const { Pool } =  require("pg");
 const db = new Pool({
   user: "postgres",
   host: "localhost",
