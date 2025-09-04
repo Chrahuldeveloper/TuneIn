@@ -14,7 +14,6 @@ var SCOPE =
 
 export default function Home() {
   const [token, setToken] = useState<string | null>(null);
-  const [user, setUser] = useState<any>(null);
 
   // Read : https://developer.spotify.com/documentation/web-api/tutorials/code-pkce-flowda
   const generateRandomString = (length: number) => {
@@ -71,8 +70,7 @@ export default function Home() {
           Authorization: `Bearer ${token}`,
         },
       });
-      const res = await getUser.json();
-      setUser(res);
+      await getUser.json();
     } catch (error) {
       console.log(error);
     }

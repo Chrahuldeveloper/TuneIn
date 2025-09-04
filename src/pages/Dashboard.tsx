@@ -15,20 +15,24 @@ import { CiMusicNote1 } from "react-icons/ci";
 import { MdSkipNext } from "react-icons/md";
 import { FaRegCopy } from "react-icons/fa6";
 
+interface User {
+  name: string;
+  email: string;
+}
+
 export default function Dashboard() {
   const [token, setToken] = useState<string | null>(null);
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<User>({
+    name: "",
+    email: "",
+  });
   const [playlists, setPlaylists] = useState<any[]>([]);
   const [currentTrack, setCurrentTrack] = useState<any>(null);
   const [selectedStyle, setSelectedStyle] = useState<
     "compact" | "banner" | "waveform" | null
   >(null);
 
-  console.log(selectedStyle)
-
-  const [readMeLink, setreadMeLink] = useState<string | null>(null)
-
-
+  const [readMeLink, setreadMeLink] = useState<string | null>(null);
 
   useEffect(() => {
     if (selectedStyle) {
@@ -36,8 +40,7 @@ export default function Dashboard() {
     }
   }, [selectedStyle]);
 
-
-  console.log(readMeLink)
+  console.log(readMeLink);
 
   const getToken = async () => {
     const params = new URLSearchParams(window.location.search);
@@ -48,7 +51,6 @@ export default function Dashboard() {
 
       const body = new URLSearchParams({
         client_id: CLIENT_ID,
-
         grant_type: "authorization_code",
         code: code,
         redirect_uri: REDIRECT_URI,
@@ -62,6 +64,7 @@ export default function Dashboard() {
       });
 
       const data = await res.json();
+      console.log(data);
       setToken(data.access_token);
       localStorage.setItem("spotify_token", data.access_token);
       window.history.replaceState({}, document.title, "/dashboard");
@@ -83,7 +86,11 @@ export default function Dashboard() {
         headers: { Authorization: `Bearer ${token}` },
       });
       const userResponse = await userRes.json();
-      setUser(userResponse);
+      const newUser = {
+        name: userResponse.display_name,
+        email: userResponse.email,
+      };
+      setUser(newUser);
 
       const playlistsRes = await fetch(
         "https://api.spotify.com/v1/me/playlists",
@@ -109,6 +116,16 @@ export default function Dashboard() {
         const data = await trackRes.json();
         setCurrentTrack(data);
       }
+
+      await fetch("http://localhost:3001/api/save", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          ...newUser,
+        }),
+      });
     } catch (error) {
       console.error(error);
     }
@@ -118,24 +135,16 @@ export default function Dashboard() {
     if (token) getData(token);
   }, [token]);
 
-
-
-
   const copyLink = async () => {
     try {
-
-      await navigator.clipboard.writeText(readMeLink!)
+      await navigator.clipboard.writeText(readMeLink!);
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-  }
+  };
 
-
-
-
-
-  console.log(user)
-  console.log(currentTrack)
+  console.log(user);
+  console.log(currentTrack);
 
   const renderPreview = () => {
     if (!selectedStyle) {
@@ -144,7 +153,6 @@ export default function Dashboard() {
           <FaRegEye size={40} className="mb-2" />
           <p>Select a widget style to preview</p>
         </div>
-
       );
     }
 
@@ -293,10 +301,11 @@ export default function Dashboard() {
 
               <div
                 onClick={() => setSelectedStyle("compact")}
-                className={`border-[1px] transition-colors cursor-pointer rounded-lg px-4 py-5 flex items-center justify-between ${selectedStyle === "compact"
-                  ? "border-green-500"
-                  : "border-[#2a2d34]"
-                  }`}
+                className={`border-[1px] transition-colors cursor-pointer rounded-lg px-4 py-5 flex items-center justify-between ${
+                  selectedStyle === "compact"
+                    ? "border-green-500"
+                    : "border-[#2a2d34]"
+                }`}
               >
                 <div className="flex items-center space-x-3.5">
                   <FaRegChartBar size={25} color="#00a63e" />
@@ -312,10 +321,11 @@ export default function Dashboard() {
 
               <div
                 onClick={() => setSelectedStyle("banner")}
-                className={`border-[1px] transition-colors cursor-pointer rounded-lg px-4 py-5 flex items-center justify-between ${selectedStyle === "banner"
-                  ? "border-green-500"
-                  : "border-[#2a2d34]"
-                  }`}
+                className={`border-[1px] transition-colors cursor-pointer rounded-lg px-4 py-5 flex items-center justify-between ${
+                  selectedStyle === "banner"
+                    ? "border-green-500"
+                    : "border-[#2a2d34]"
+                }`}
               >
                 <div className="flex items-center space-x-3.5">
                   <IoCodeSlashOutline size={25} color="#00a63e" />
@@ -331,10 +341,11 @@ export default function Dashboard() {
 
               <div
                 onClick={() => setSelectedStyle("waveform")}
-                className={`border-[1px] transition-colors cursor-pointer rounded-lg px-4 py-5 flex items-center justify-between ${selectedStyle === "waveform"
-                  ? "border-green-500"
-                  : "border-[#2a2d34]"
-                  }`}
+                className={`border-[1px] transition-colors cursor-pointer rounded-lg px-4 py-5 flex items-center justify-between ${
+                  selectedStyle === "waveform"
+                    ? "border-green-500"
+                    : "border-[#2a2d34]"
+                }`}
               >
                 <div className="flex items-center space-x-3.5">
                   <AiOutlineThunderbolt size={25} color="#00a63e" />
