@@ -33,8 +33,8 @@ saveDetailsRouter.post("/api/save", async (req, res) => {
       userID = existing.rows[0].id;
     }
 
-    const token = jwt.sign({ id: userID }, JWT_SECRET, { expiresIn: "7d" });
-    return res.json({ token });
+    const authToken = jwt.sign({ id: userID }, JWT_SECRET, { expiresIn: "7d" });
+    return res.json({ authToken });
   } catch (error) {
     console.error("❌ Error saving user:", error);
     res.status(500).json({ error: "Internal server error" });
