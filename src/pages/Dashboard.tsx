@@ -43,7 +43,6 @@ export default function Dashboard() {
     }
   }, [selectedStyle, user.name]);
 
-
   const getToken = async () => {
     const params = new URLSearchParams(window.location.search);
     const code = params.get("code");
@@ -79,7 +78,6 @@ export default function Dashboard() {
   useEffect(() => {
     getToken();
   }, []);
-
 
   const saveCurrentSong = async () => {
     try {
@@ -171,7 +169,6 @@ export default function Dashboard() {
       console.log(error);
     }
   };
-
 
   const renderPreview = () => {
     if (!selectedStyle) {

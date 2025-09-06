@@ -5,12 +5,16 @@ import { MdSkipNext } from "react-icons/md";
 import { CiMusicNote1 } from "react-icons/ci";
 import { useEffect, useState } from "react";
 
+interface CurrentTrack {
+  trackName: string;
+  artistName: string;
+  albumArt: string;
+}
+
 export default function Widget() {
   const { username, widgetname, id } = useParams();
 
-  console.log(atob(id!));
-
-  const [currentTrack, setcurrentTrack] = useState({
+  const [currentTrack, setcurrentTrack] = useState<CurrentTrack>({
     trackName: "",
     artistName: "",
     albumArt: "",
@@ -31,14 +35,12 @@ export default function Widget() {
           },
         }
       );
-
       const song = await res.json();
       setcurrentTrack({
         trackName: song.current_song.trackName,
         albumArt: song.current_song.albumArt,
         artistName: song.current_song.artistName,
       });
-      console.log(song.current_song);
     } catch (error) {
       console.log(error);
     }
