@@ -121,7 +121,6 @@ export default function Dashboard() {
             ...newUser,
           }),
         });
-
         const { authToken } = await res.json();
         localStorage.setItem("authToken", authToken);
       }
