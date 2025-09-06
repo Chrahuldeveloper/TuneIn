@@ -117,15 +117,20 @@ export default function Dashboard() {
         setCurrentTrack(data);
       }
 
-      await fetch("http://localhost:3001/api/save", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          ...newUser,
-        }),
-      });
+      if (localStorage.getItem("saved") === "true") {
+        return null;
+      } else {
+        await fetch("http://localhost:3001/api/save", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            ...newUser,
+          }),
+        });
+        localStorage.setItem("saved", "true");
+      }
     } catch (error) {
       console.error(error);
     }
@@ -284,7 +289,8 @@ export default function Dashboard() {
               <FaRegCopy cursor={"pointer"} onClick={copyLink} />
             </div>
           </div>
-          {readMeLink}
+
+          {token ? readMeLink : ""}
           <p className="text-slate-200 text-xs font-semibold">
             Paste this markdown code into your GitHub README or any markdown
             file
