@@ -12,10 +12,8 @@ saveDetailsRouter.post("/api/save", async (req, res) => {
 
     const JWT_SECRET = "abllkdvksdvlksdvorlsvoivhlmxcovhlmsboiuhfvlkn98h";
 
-    console.log(name, email);
-
     const queryResult = await dbclient.query("SELECT * FROM users;");
-    console.log(queryResult.rows); // this will log all users
+    console.log(queryResult.rows); 
 
     await dbclient.query(`INSERT INTO users (name, email) VALUES ($1, $2)`, [
       name,
@@ -37,8 +35,6 @@ saveDetailsRouter.post("/api/save", async (req, res) => {
 saveDetailsRouter.post("/api/savesong", async (req, res) => {
   try {
     const { email, songDetails } = req.body;
-
-    console.log(email,songDetails)
 
     await dbclient.query(
       "UPDATE users SET current_song = $1 WHERE email = $2",

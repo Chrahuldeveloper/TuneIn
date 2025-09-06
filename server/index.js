@@ -2,6 +2,7 @@ const express = require("express");
 const db = require("./dbconfig/connectDb");
 const cors = require("cors");
 const saveDetailsRouter = require("./routes/SaveDetails");
+const RenderWidgetRoute = require("./routes/RenderWidget");
 
 const app = express();
 const PORT = 3001;
@@ -9,6 +10,7 @@ const PORT = 3001;
 app.use(cors());
 app.use(express.json());
 app.use("/", saveDetailsRouter);
+app.use("/", RenderWidgetRoute);
 
 const createUsersTable = async () => {
   try {

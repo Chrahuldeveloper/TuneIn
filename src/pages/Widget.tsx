@@ -3,20 +3,50 @@ import { IoPauseOutline } from "react-icons/io5";
 import { FaRegHeart } from "react-icons/fa";
 import { MdSkipNext } from "react-icons/md";
 import { CiMusicNote1 } from "react-icons/ci";
-
-const currentTrack = {
-  name: "Blinding Lights",
-  artist: "The Weeknd",
-  albumArt:
-    "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=300&h=300&fit=crop&crop=center",
-};
+import { useEffect, useState } from "react";
 
 export default function Widget() {
-  const { username, widgetname } = useParams();
+  const { username, widgetname, id } = useParams();
 
-  const trackName = currentTrack.name;
-  const artistName = currentTrack.artist;
+  console.log(atob(id!));
+
+  const [currentTrack, setcurrentTrack] = useState({
+    trackName: "",
+    artistName: "",
+    albumArt: "",
+  });
+
+  const trackName = currentTrack.trackName;
+  const artistName = currentTrack.artistName;
   const albumArt = currentTrack.albumArt;
+
+  const fetchCurrentTrack = async () => {
+    try {
+      const res = await fetch(
+        `http://localhost:3001/api/currentsong?email=${atob(id!)}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      const song = await res.json();
+      setcurrentTrack({
+        trackName: song.current_song.trackName,
+        albumArt: song.current_song.albumArt,
+        artistName: song.current_song.artistName,
+      });
+      console.log(song.current_song);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchCurrentTrack();
+  }, [id]);
 
   const renderWidget = () => {
     if (widgetname === "compact") {
