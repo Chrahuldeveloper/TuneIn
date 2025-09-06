@@ -1,6 +1,8 @@
 const { Router } = require("express");
 const saveDetailsRouter = Router();
 const dbclient = require("../dbconfig/connectDb");
+const jwt = require("jsonwebtoken");
+
 saveDetailsRouter.post("/api/save", async (req, res) => {
   try {
     const { name, email } = req.body;
@@ -9,14 +11,30 @@ saveDetailsRouter.post("/api/save", async (req, res) => {
       return res.status(400).json({ error: "Name and email are required" });
     }
 
+    const JWT_SECRET = "abllkdvksdvlksdvorlsvoivhlmxcovhlmsboiuhfvlkn98h";
+
     console.log(name, email);
-    await dbclient.query(
+    const queryResult = await dbclient.query(
       `INSERT INTO users (name, email) VALUES ($1, $2)
-   ON CONFLICT (email) DO NOTHING`,
+       ON CONFLICT (email) DO NOTHING
+       RETURNING id`,
       [name, email]
     );
-    console.log("user saved done!");
-    res.status(201).json({ message: "✅ User saved successfully" });
+
+    let userID;
+    if (queryResult.rows.length > 0) {
+      userID = queryResult.rows[0].id;
+      console.log("✅ User saved!");
+    } else {
+      const existing = await dbclient.query(
+        `SELECT id FROM users WHERE email = $1`,
+        [email]
+      );
+      userID = existing.rows[0].id;
+    }
+
+    const token = jwt.sign({ id: userID }, JWT_SECRET, { expiresIn: "7d" });
+    return res.json({ token });
   } catch (error) {
     console.error("❌ Error saving user:", error);
     res.status(500).json({ error: "Internal server error" });
