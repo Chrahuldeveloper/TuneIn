@@ -12,7 +12,7 @@ interface CurrentTrack {
 }
 
 export default function Widget() {
-  const { username, widgetname, id } = useParams();
+  const { widgetname, id, token } = useParams();
 
   const [currentTrack, setcurrentTrack] = useState<CurrentTrack>({
     trackName: "",
@@ -26,29 +26,34 @@ export default function Widget() {
 
   const fetchCurrentTrack = async () => {
     try {
-      const res = await fetch(
-        `http://localhost:3001/api/currentsong?email=${atob(id!)}`,
+      const trackRes = await fetch(
+        "https://api.spotify.com/v1/me/player/currently-playing",
         {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: { Authorization: `Bearer ${token}` },
         }
       );
-      const song = await res.json();
+
+      if (trackRes.status === 204 || trackRes.status > 400) {
+        console.log("No track currently playing");
+        return;
+      }
+
+      const song = await trackRes.json();
+
       setcurrentTrack({
-        trackName: song.current_song.trackName,
-        albumArt: song.current_song.albumArt,
-        artistName: song.current_song.artistName,
+        trackName: song?.item?.name || "",
+        albumArt: song?.item?.album?.images?.[0]?.url || "",
+        artistName:
+          song?.item?.artists?.map((a: any) => a.name).join(", ") || "",
       });
     } catch (error) {
-      console.log(error);
+      console.log("❌ Error fetching track:", error);
     }
   };
 
   useEffect(() => {
     fetchCurrentTrack();
-  }, [id]);
+  }, [token, id]);
 
   const renderWidget = () => {
     if (widgetname === "compact") {

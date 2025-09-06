@@ -38,7 +38,7 @@ export default function Dashboard() {
       setreadMeLink(
         `http://127.0.0.1:8000/${btoa(user.name)}/widget/${btoa(
           user.email
-        )}/${selectedStyle}`
+        )}/${token}/${selectedStyle}`
       );
     }
   }, [selectedStyle, user.name]);
@@ -298,7 +298,7 @@ export default function Dashboard() {
           </p>
         </div>
 
-        <div className="bg-[#1f2228] flex flex-col gap-5 max-w-4xl mx-auto justify-center p-5 rounded-lg  text-slate-300 my-5">
+        <div className="bg-[#1f2228] flex flex-col gap-5 max-w-5xl mx-auto overflow-x-clip justify-center p-5 rounded-lg  text-slate-300 my-5">
           <div className="flex justify-between items-center">
             <div className="flex items-center space-x-3">
               <IoCodeSlashOutline size={25} color="#00a63e" />
@@ -308,9 +308,8 @@ export default function Dashboard() {
               <FaRegCopy cursor={"pointer"} onClick={copyLink} />
             </div>
           </div>
-
-          {token ? readMeLink : ""}
-          <p className="text-slate-200 text-xs font-semibold">
+          <p className="w-28">{token ? readMeLink : ""}</p>
+          <p className="text-slate-200  text-xs font-semibold">
             Paste this markdown code into your GitHub README or any markdown
             file
           </p>
