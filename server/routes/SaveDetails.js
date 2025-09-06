@@ -2,7 +2,6 @@ const { Router } = require("express");
 const saveDetailsRouter = Router();
 const dbclient = require("../dbconfig/connectDb");
 const jwt = require("jsonwebtoken");
-
 saveDetailsRouter.post("/api/save", async (req, res) => {
   try {
     const { name, email } = req.body;
@@ -14,26 +13,20 @@ saveDetailsRouter.post("/api/save", async (req, res) => {
     const JWT_SECRET = "abllkdvksdvlksdvorlsvoivhlmxcovhlmsboiuhfvlkn98h";
 
     console.log(name, email);
-    const queryResult = await dbclient.query(
-      `INSERT INTO users (name, email) VALUES ($1, $2)
-       ON CONFLICT (email) DO NOTHING
-       RETURNING id`,
-      [name, email]
-    );
 
-    let userID;
-    if (queryResult.rows.length > 0) {
-      userID = queryResult.rows[0].id;
-      console.log("✅ User saved!");
-    } else {
-      const existing = await dbclient.query(
-        `SELECT id FROM users WHERE email = $1`,
-        [email]
-      );
-      userID = existing.rows[0].id;
-    }
+    const queryResult = await dbclient.query("SELECT * FROM users;");
+    console.log(queryResult.rows); // this will log all users
 
-    const authToken = jwt.sign({ id: userID }, JWT_SECRET, { expiresIn: "7d" });
+    await dbclient.query(`INSERT INTO users (name, email) VALUES ($1, $2)`, [
+      name,
+      email,
+    ]);
+
+    console.log("User saved");
+
+    const authToken = jwt.sign({ email: email }, JWT_SECRET, {
+      expiresIn: "7d",
+    });
     return res.json({ authToken });
   } catch (error) {
     console.error("❌ Error saving user:", error);
@@ -44,6 +37,8 @@ saveDetailsRouter.post("/api/save", async (req, res) => {
 saveDetailsRouter.post("/api/savesong", async (req, res) => {
   try {
     const { email, songDetails } = req.body;
+
+    console.log(email,songDetails)
 
     await dbclient.query(
       "UPDATE users SET current_song = $1 WHERE email = $2",
