@@ -36,12 +36,13 @@ export default function Dashboard() {
   useEffect(() => {
     if (selectedStyle && user.name) {
       setreadMeLink(
-        `http://127.0.0.1:8000/${user.name}/widget/${selectedStyle}`
+        `http://127.0.0.1:8000/${user.name}/widget/${btoa(
+          user.email
+        )}/${selectedStyle}`
       );
     }
   }, [selectedStyle, user.name]);
 
-  console.log(readMeLink);
 
   const getToken = async () => {
     const params = new URLSearchParams(window.location.search);
@@ -79,7 +80,6 @@ export default function Dashboard() {
     getToken();
   }, []);
 
-  console.log(currentTrack);
 
   const saveCurrentSong = async () => {
     try {
@@ -88,9 +88,6 @@ export default function Dashboard() {
         artistName: currentTrack?.item?.artists?.[0]?.name,
         albumArt: currentTrack?.item?.album?.images?.[0]?.url,
       };
-
-      console.log(user.email);
-      console.log(track);
 
       await fetch("http://localhost:3001/api/savesong", {
         method: "POST",
@@ -175,7 +172,6 @@ export default function Dashboard() {
     }
   };
 
-  console.log(user);
 
   const renderPreview = () => {
     if (!selectedStyle) {
