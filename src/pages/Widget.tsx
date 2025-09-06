@@ -155,7 +155,6 @@ export default function Widget() {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-[#111216]">
-      <h1 className="text-white text-lg mb-6">{username}’s Widget</h1>
       {renderWidget()}
     </div>
   );

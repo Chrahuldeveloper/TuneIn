@@ -36,7 +36,7 @@ export default function Dashboard() {
   useEffect(() => {
     if (selectedStyle && user.name) {
       setreadMeLink(
-        `http://127.0.0.1:8000/${user.name}/widget/${btoa(
+        `http://127.0.0.1:8000/${btoa(user.name)}/widget/${btoa(
           user.email
         )}/${selectedStyle}`
       );
