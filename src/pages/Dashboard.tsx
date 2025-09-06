@@ -26,21 +26,20 @@ export default function Dashboard() {
     name: "",
     email: "",
   });
-  const [playlists, setPlaylists] = useState<any[]>([]);
   const [currentTrack, setCurrentTrack] = useState<any>(null);
   const [selectedStyle, setSelectedStyle] = useState<
     "compact" | "banner" | "waveform" | "compact"
   >("compact");
 
-
-
   const [readMeLink, setreadMeLink] = useState<string | null>(null);
 
   useEffect(() => {
     if (selectedStyle && user.name) {
-      setreadMeLink(`http://127.0.0.1:8000/${user.name}/${selectedStyle}`);
+      setreadMeLink(
+        `http://127.0.0.1:8000/${user.name}/widget/${selectedStyle}`
+      );
     }
-  }, [selectedStyle,user.name]);
+  }, [selectedStyle, user.name]);
 
   console.log(readMeLink);
 
@@ -93,15 +92,6 @@ export default function Dashboard() {
         email: userResponse.email,
       };
       setUser(newUser);
-
-      const playlistsRes = await fetch(
-        "https://api.spotify.com/v1/me/playlists",
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-      const playlistsResponse = await playlistsRes.json();
-      setPlaylists(playlistsResponse.items || []);
 
       const trackRes = await fetch(
         "https://api.spotify.com/v1/me/player/currently-playing",
@@ -268,7 +258,7 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="  w-full h-screen overflow-y-none">
+    <div className="w-full h-screen overflow-y-none">
       <div className=" bg-[#111216] h-[110vh] overflow-y-none">
         <Navbar />
 
