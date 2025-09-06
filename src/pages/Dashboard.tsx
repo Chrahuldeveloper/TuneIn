@@ -109,10 +109,10 @@ export default function Dashboard() {
         setCurrentTrack(data);
       }
 
-      if (localStorage.getItem("saved") === "true") {
+      if (localStorage.getItem("authToken")) {
         return null;
       } else {
-        await fetch("http://localhost:3001/api/save", {
+        const res = await fetch("http://localhost:3001/api/save", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -121,7 +121,9 @@ export default function Dashboard() {
             ...newUser,
           }),
         });
-        localStorage.setItem("saved", "true");
+
+        const { token } = await res.json();
+        localStorage.setItem("authToken", token);
       }
     } catch (error) {
       console.error(error);
@@ -141,7 +143,6 @@ export default function Dashboard() {
   };
 
   console.log(user);
-  console.log(currentTrack);
 
   const renderPreview = () => {
     if (!selectedStyle) {
