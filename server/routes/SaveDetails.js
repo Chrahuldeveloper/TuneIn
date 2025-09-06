@@ -20,8 +20,6 @@ saveDetailsRouter.post("/api/save", async (req, res) => {
       email,
     ]);
 
-    console.log("User saved");
-
     const authToken = jwt.sign({ email: email }, JWT_SECRET, {
       expiresIn: "7d",
     });
