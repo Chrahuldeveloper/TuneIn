@@ -29,16 +29,18 @@ export default function Dashboard() {
   const [playlists, setPlaylists] = useState<any[]>([]);
   const [currentTrack, setCurrentTrack] = useState<any>(null);
   const [selectedStyle, setSelectedStyle] = useState<
-    "compact" | "banner" | "waveform" | null
-  >(null);
+    "compact" | "banner" | "waveform" | "compact"
+  >("compact");
+
+
 
   const [readMeLink, setreadMeLink] = useState<string | null>(null);
 
   useEffect(() => {
-    if (selectedStyle) {
-      setreadMeLink(`http://127.0.0.1:8000/username/widget/${selectedStyle}`);
+    if (selectedStyle && user.name) {
+      setreadMeLink(`http://127.0.0.1:8000/${user.name}/${selectedStyle}`);
     }
-  }, [selectedStyle]);
+  }, [selectedStyle,user.name]);
 
   console.log(readMeLink);
 
