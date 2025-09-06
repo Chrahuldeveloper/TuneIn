@@ -122,8 +122,8 @@ export default function Dashboard() {
           }),
         });
 
-        const { token } = await res.json();
-        localStorage.setItem("authToken", token);
+        const { authToken } = await res.json();
+        localStorage.setItem("authToken", authToken);
       }
     } catch (error) {
       console.error(error);
