@@ -79,6 +79,36 @@ export default function Dashboard() {
     getToken();
   }, []);
 
+  console.log(currentTrack);
+
+  const saveCurrentSong = async () => {
+    try {
+      const track = {
+        trackName: currentTrack?.item?.name,
+        artistName: currentTrack?.item?.artists?.[0]?.name,
+        albumArt: currentTrack?.item?.album?.images?.[0]?.url,
+      };
+
+      console.log(user.email);
+      console.log(track);
+
+      await fetch("http://localhost:3001/api/savesong", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: user.email,
+          songDetails: track,
+        }),
+      });
+
+      console.log("song saved");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const getData = async (token: string) => {
     if (!token) return;
 
@@ -132,6 +162,10 @@ export default function Dashboard() {
   useEffect(() => {
     if (token) getData(token);
   }, [token]);
+
+  useEffect(() => {
+    saveCurrentSong();
+  }, [currentTrack]);
 
   const copyLink = async () => {
     try {
