@@ -65,7 +65,20 @@ export default function Dashboard() {
       });
 
       const data = await res.json();
-      console.log(data);
+      const saveToken = await fetch(
+        " http://localhost:3001/api/refresh-token",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            refreshToken: data.refresh_token,
+            email: user.email,
+          }),
+        }
+      );
+
+      console.log(data.refresh_token);
+      console.log(await saveToken.json());
       setToken(data.access_token);
       localStorage.setItem("spotify_token", data.access_token);
       window.history.replaceState({}, document.title, "/dashboard");
@@ -298,7 +311,7 @@ export default function Dashboard() {
           </p>
         </div>
 
-        <div className="bg-[#1f2228] flex flex-col gap-5 max-w-5xl mx-auto overflow-x-clip justify-center p-5 rounded-lg  text-slate-300 my-5">
+        {/* <div className="bg-[#1f2228] flex flex-col gap-5 max-w-5xl mx-auto overflow-x-clip justify-center p-5 rounded-lg  text-slate-300 my-5">
           <div className="flex justify-between items-center">
             <div className="flex items-center space-x-3">
               <IoCodeSlashOutline size={25} color="#00a63e" />
@@ -318,7 +331,7 @@ export default function Dashboard() {
             Paste this markdown code into your GitHub README or any markdown
             file
           </p>
-        </div>
+        </div> */}
 
         <div className="bg-[#1f2228] flex flex-col gap-5 max-w-5xl mx-auto overflow-x-clip justify-center p-5 rounded-lg  text-slate-300 my-5">
           <div className="flex justify-between items-center">
