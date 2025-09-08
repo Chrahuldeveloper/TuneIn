@@ -33,13 +33,39 @@ export default function Widget() {
         }
       );
 
-      if (trackRes.status === 204 || trackRes.status > 400) {
+      if (trackRes.status === 401) {
+        console.log("⚠️ Token expired, getting new one...");
+
+        const refreshRes = await fetch(
+          `http://localhost:3001/api/get-new-token?email=${atob(id!)}`
+        );
+
+        const refreshData = await refreshRes.json();
+        if (refreshData.accessToken) {
+          const newToken = refreshData.accessToken;
+          const retryRes = await fetch(
+            "https://api.spotify.com/v1/me/player/currently-playing",
+            {
+              headers: { Authorization: `Bearer ${newToken}` },
+            }
+          );
+          if (retryRes.ok) {
+            const song = await retryRes.json();
+            setcurrentTrack({
+              trackName: song?.item?.name || "",
+              albumArt: song?.item?.album?.images?.[0]?.url || "",
+              artistName:
+                song?.item?.artists?.map((a: any) => a.name).join(", ") || "",
+            });
+          }
+        }
+        return;
+      }
+      if (trackRes.status === 204) {
         console.log("No track currently playing");
         return;
       }
-
       const song = await trackRes.json();
-
       setcurrentTrack({
         trackName: song?.item?.name || "",
         albumArt: song?.item?.album?.images?.[0]?.url || "",
@@ -53,6 +79,8 @@ export default function Widget() {
 
   useEffect(() => {
     fetchCurrentTrack();
+    const interval = setInterval(fetchCurrentTrack, 10000);
+    return () => clearInterval(interval);
   }, [token, id]);
 
   const renderWidget = () => {

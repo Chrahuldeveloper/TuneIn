@@ -2,7 +2,8 @@ const express = require("express");
 const db = require("./dbconfig/connectDb");
 const cors = require("cors");
 const saveDetailsRouter = require("./routes/SaveDetails");
-
+const dotenv = require("dotenv")
+dotenv.config(); 
 const app = express();
 const PORT = 3001;
 

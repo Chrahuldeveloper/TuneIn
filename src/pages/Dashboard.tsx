@@ -65,21 +65,27 @@ export default function Dashboard() {
       });
 
       const data = await res.json();
-      const saveToken = await fetch(
-        " http://localhost:3001/api/refresh-token",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            refreshToken: data.refresh_token,
-            email: user.email,
-          }),
-        }
-      );
-
-      console.log(data.refresh_token);
-      console.log(await saveToken.json());
       setToken(data.access_token);
+
+      const userRes = await fetch("https://api.spotify.com/v1/me", {
+        headers: { Authorization: `Bearer ${data.access_token}` },
+      });
+      const userResponse = await userRes.json();
+      const newUser = {
+        name: userResponse.display_name,
+        email: userResponse.email,
+      };
+      setUser(newUser);
+
+      await fetch("http://localhost:3001/api/refresh-token", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          refreshToken: data.refresh_token,
+          email: userResponse.email,
+        }),
+      });
+
       localStorage.setItem("spotify_token", data.access_token);
       window.history.replaceState({}, document.title, "/dashboard");
     } else {
