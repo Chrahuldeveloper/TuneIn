@@ -43,4 +43,19 @@ saveDetailsRouter.post("/api/savesong", async (req, res) => {
   }
 });
 
+saveDetailsRouter.post("/api/refresh-token", async (req, res) => {
+  try {
+    const { refreshToken, email } = req.body;
+
+    await dbclient.query(
+      "UPDATE users SET refreshToken = $1 WHERE email = $2",
+      [refreshToken, email]
+    );
+
+    return res.json({ message: "token saved" });
+  } catch (error) {
+    console.log(error);
+  }
+});
+
 module.exports = saveDetailsRouter;
