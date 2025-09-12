@@ -5,7 +5,6 @@ TuneIn is a web app that connects with Spotify to show your currently playing tr
 ## Features
 
 - ✅ Show **currently playing track**  
-- ✅ View **recently played tracks**  
 - ✅ Generate **widgets for GitHub README** or personal sites  
 
 ## Setup & Installation
@@ -26,4 +25,5 @@ echo "http://127.0.0.1:8000/dashboard" >> .env
 
 # Run the development server
 npm run dev
+
 
