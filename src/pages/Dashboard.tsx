@@ -43,6 +43,35 @@ export default function Dashboard() {
     }
   }, [selectedStyle, user.name]);
 
+  const refreshAccessToken = async () => {
+    try {
+      const refresh_token = localStorage.getItem("spotify_refreshtoken");
+      if (!refresh_token) return null;
+
+      const body = new URLSearchParams({
+        client_id: CLIENT_ID,
+        grant_type: "refresh_token",
+        refresh_token,
+      });
+
+      const res = await fetch("https://accounts.spotify.com/api/token", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: body.toString(),
+      });
+
+      const data = await res.json();
+      if (data.access_token) {
+        localStorage.setItem("spotify_token", data.access_token);
+        setToken(data.access_token);
+        return data.access_token;
+      }
+      return null;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const getToken = async () => {
     const params = new URLSearchParams(window.location.search);
     const code = params.get("code");
@@ -65,6 +94,7 @@ export default function Dashboard() {
       });
 
       const data = await res.json();
+      console.log(data.refresh_token);
       setToken(data.access_token);
 
       const userRes = await fetch("https://api.spotify.com/v1/me", {
@@ -85,8 +115,8 @@ export default function Dashboard() {
           email: userResponse.email,
         }),
       });
-
       localStorage.setItem("spotify_token", data.access_token);
+      localStorage.setItem("spotify_refreshtoken", data.refresh_token);
       window.history.replaceState({}, document.title, "/dashboard");
     } else {
       const storedToken = localStorage.getItem("spotify_token");
@@ -147,7 +177,10 @@ export default function Dashboard() {
       if (trackRes.status === 204) {
         setCurrentTrack(null);
       } else if (trackRes.status === 401) {
-        console.error("Token missing permission");
+        const newToken = await refreshAccessToken();
+        if (newToken) {
+          return getData(newToken);
+        }
       } else {
         const data = await trackRes.json();
         setCurrentTrack(data);
