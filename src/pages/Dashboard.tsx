@@ -22,6 +22,7 @@ interface User {
 
 export default function Dashboard() {
   const [token, setToken] = useState<string | null>(null);
+  const [refreshtoken, setrefreshtoken] = useState<string | null>(null);
   const [user, setUser] = useState<User>({
     name: "",
     email: "",
@@ -47,6 +48,7 @@ export default function Dashboard() {
     try {
       const refresh_token = localStorage.getItem("spotify_refreshtoken");
       if (!refresh_token) return null;
+      setrefreshtoken(refresh_token);
 
       const body = new URLSearchParams({
         client_id: CLIENT_ID,
@@ -115,6 +117,7 @@ export default function Dashboard() {
           email: userResponse.email,
         }),
       });
+      setrefreshtoken(data.refresh_token);
       localStorage.setItem("spotify_token", data.access_token);
       localStorage.setItem("spotify_refreshtoken", data.refresh_token);
       window.history.replaceState({}, document.title, "/dashboard");
@@ -196,6 +199,7 @@ export default function Dashboard() {
           },
           body: JSON.stringify({
             ...newUser,
+            refreshtoken,
           }),
         });
         const { authToken } = await res.json();
