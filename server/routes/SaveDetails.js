@@ -4,10 +4,12 @@ const dbclient = require("../dbconfig/connectDb");
 const jwt = require("jsonwebtoken");
 saveDetailsRouter.post("/api/save", async (req, res) => {
   try {
-    const { name, email } = req.body;
+    const { name, email, refreshtoken } = req.body;
 
-    if (!name || !email) {
-      return res.status(400).json({ error: "Name and email are required" });
+    if (!name || !email || !refreshtoken) {
+      return res
+        .status(400)
+        .json({ error: "Name and email,refreshtoken are required" });
     }
 
     const JWT_SECRET = "CMRCET-KI-MAA-KI-CHUT";
@@ -15,10 +17,10 @@ saveDetailsRouter.post("/api/save", async (req, res) => {
     const queryResult = await dbclient.query("SELECT * FROM users;");
     console.log(queryResult.rows);
 
-    await dbclient.query(`INSERT INTO users (name, email) VALUES ($1, $2)`, [
-      name,
-      email,
-    ]);
+    await dbclient.query(
+      `INSERT INTO users (name, email,refreshtoken) VALUES ($1, $2,$3)`,
+      [name, email, refreshtoken]
+    );
 
     const authToken = jwt.sign({ email: email }, JWT_SECRET, {
       expiresIn: "7d",
@@ -46,8 +48,8 @@ saveDetailsRouter.post("/api/savesong", async (req, res) => {
 saveDetailsRouter.post("/api/refresh-token", async (req, res) => {
   try {
     const { refreshToken, email } = req.body;
-    console.log(email)
-    console.log(refreshToken)
+    console.log(email);
+    console.log(refreshToken);
     await dbclient.query(
       "UPDATE users SET refreshToken = $1 WHERE email = $2",
       [refreshToken, email]
