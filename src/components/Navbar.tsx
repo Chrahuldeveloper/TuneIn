@@ -50,7 +50,7 @@ export default function Navbar() {
             </Link>
             <li className="cursor-pointer flex items-center space-x-3">
               <CgProfile size={23} />
-              <p>Account</p>
+              <p>About</p>
             </li>
           </ul>
         </div>
@@ -81,7 +81,7 @@ export default function Navbar() {
             </div>
             <div className="flex items-center space-x-3 text-white">
               <CgProfile size={23} />
-              <p>Account</p>
+              <p>About</p>
             </div>
           </div>
         </>

@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { Navbar } from "../components";
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism";
 
 const CLIENT_ID = import.meta.env.VITE_CLIENT_ID;
 const REDIRECT_URI = import.meta.env.VITE_REDIRECT_URI;
@@ -14,6 +16,7 @@ import { AiOutlineThunderbolt } from "react-icons/ai";
 import { CiMusicNote1 } from "react-icons/ci";
 import { MdSkipNext } from "react-icons/md";
 import { FaRegCopy } from "react-icons/fa6";
+import PopUp from "../components/PopUp";
 
 interface User {
   name: string;
@@ -33,6 +36,8 @@ export default function Dashboard() {
   >("compact");
 
   const [readMeLink, setreadMeLink] = useState<string | null>(null);
+
+  const [isCopied, setisCopied] = useState<boolean>(false);
 
   useEffect(() => {
     if (selectedStyle && user.name) {
@@ -220,11 +225,22 @@ export default function Dashboard() {
 
   const copyLink = async (data: any) => {
     try {
+      setisCopied(true);
       await navigator.clipboard.writeText(data!);
+      setTimeout(() => {
+        setisCopied(false);
+      }, 3000);
     } catch (error) {
       console.log(error);
     }
   };
+
+  const codeString = `<iframe
+  src="${readMeLink}"
+  width="400"
+  height="120"
+  style="border:none; border-radius:12px; overflow:hidden;"
+></iframe>`;
 
   const renderPreview = () => {
     if (!selectedStyle) {
@@ -354,29 +370,7 @@ export default function Dashboard() {
           </p>
         </div>
 
-        {/* <div className="bg-[#1f2228] flex flex-col gap-5 max-w-5xl mx-auto overflow-x-clip justify-center p-5 rounded-lg  text-slate-300 my-5">
-          <div className="flex justify-between items-center">
-            <div className="flex items-center space-x-3">
-              <IoCodeSlashOutline size={25} color="#00a63e" />
-              <h1 className="text-2xl font-semibold">Embed Code</h1>
-            </div>
-            <div>
-              <FaRegCopy
-                cursor={"pointer"}
-                onClick={() => {
-                  copyLink(readMeLink);
-                }}
-              />
-            </div>
-          </div>
-          <p className="w-28">{token ? readMeLink : ""}</p>
-          <p className="text-slate-200  text-xs font-semibold">
-            Paste this markdown code into your GitHub README or any markdown
-            file
-          </p>
-        </div> */}
-
-        <div className="bg-[#1f2228] flex flex-col gap-5 max-w-5xl mx-auto overflow-x-clip justify-center p-5 rounded-lg  text-slate-300 my-5">
+        <div className="bg-[#1f2228] flex flex-col gap-5 max-w-6xl mx-auto overflow-x-clip justify-center p-5 rounded-lg  text-slate-300 my-5">
           <div className="flex justify-between items-center">
             <div className="flex items-center space-x-3">
               <IoCodeSlashOutline size={25} color="#00a63e" />
@@ -398,15 +392,23 @@ export default function Dashboard() {
               />
             </div>
           </div>
-          <p className="w-28">{`
-            <iframe
-            src=${readMeLink}
-            width="400"
-            height="120"
-            style="border:none; border-radius:12px; overflow:hidden;"
-            ></iframe>
-          `}</p>
-          <p className="text-slate-200  text-xs font-semibold">
+          <SyntaxHighlighter
+            language="html"
+            style={vscDarkPlus}
+            wrapLines={true}
+            wrapLongLines={true}
+            customStyle={{
+              borderRadius: "0.75rem",
+              padding: "1rem",
+              fontSize: "0.75rem",
+              whiteSpace: "pre-wrap",
+              wordBreak: "break-word",
+              overflowX: "hidden",
+            }}
+          >
+            {codeString}
+          </SyntaxHighlighter>
+          <p className="text-slate-200 text-xs font-semibold mt-2">
             Paste this markdown code into your GitHub README or any markdown
             file
           </p>
@@ -493,6 +495,7 @@ export default function Dashboard() {
           </div>
         </div>
       </div>
+      {isCopied ? <PopUp /> : null}
     </div>
   );
 }
