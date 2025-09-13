@@ -3,6 +3,7 @@ import { CiMusicNote1 } from "react-icons/ci";
 import { Navbar, Readme } from "../components";
 import { FaGithub } from "react-icons/fa";
 import bg from "../assets/bg.png";
+import { Link } from "react-router-dom";
 
 const CLIENT_ID = import.meta.env.VITE_CLIENT_ID;
 const REDIRECT_URI = import.meta.env.VITE_REDIRECT_URI;
@@ -118,10 +119,12 @@ export default function Home() {
                   <span>Connect Spotify</span>
                 </button>
               ) : (
+                <Link to={"/dashboard"}>
                 <div className=" cursor-pointer relative bg-green-600 text-white px-6 py-3 text-xl rounded-lg font-semibold flex items-center space-x-3">
                   <CiMusicNote1 size={24} />
                   <span>{"Your Profile"}</span>
                 </div>
+                </Link>
               )}
 
               <button className="bg-gray-800 text-white px-6 py-3 rounded-lg text-xl font-semibold transition flex items-center space-x-3 cursor-pointer">
