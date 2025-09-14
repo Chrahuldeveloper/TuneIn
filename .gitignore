@@ -12,6 +12,7 @@ dist
 dist-ssr
 *.local
 TuneIn.txt
+server
 
 # Editor directories and files
 .vscode/*
