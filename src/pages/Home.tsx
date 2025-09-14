@@ -17,7 +17,7 @@ export default function Home() {
   const [token, setToken] = useState<string | null>(null);
 
   // Read : https://developer.spotify.com/documentation/web-api/tutorials/code-pkce-flowda
-  const generateRandomString = (length: number) => {
+  const generatecodeVerifier = (length: number) => {
     const possible =
       "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
     const values = crypto.getRandomValues(new Uint8Array(length));
@@ -38,7 +38,7 @@ export default function Home() {
   };
 
   const handleLogin = async () => {
-    const codeVerifier = generateRandomString(64);
+    const codeVerifier = generatecodeVerifier(64);
     const codeChallenge = await generateCodeChallenge(codeVerifier);
 
     localStorage.setItem("code_verifier", codeVerifier);
@@ -120,10 +120,10 @@ export default function Home() {
                 </button>
               ) : (
                 <Link to={"/dashboard"}>
-                <div className=" cursor-pointer relative bg-green-600 text-white px-6 py-3 text-xl rounded-lg font-semibold flex items-center space-x-3">
-                  <CiMusicNote1 size={24} />
-                  <span>{"Your Profile"}</span>
-                </div>
+                  <div className=" cursor-pointer relative bg-green-600 text-white px-6 py-3 text-xl rounded-lg font-semibold flex items-center space-x-3">
+                    <CiMusicNote1 size={24} />
+                    <span>{"Your Profile"}</span>
+                  </div>
                 </Link>
               )}
 

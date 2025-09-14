@@ -47,19 +47,17 @@ export default function Dashboard() {
         )}/${token}/${selectedStyle}`
       );
     }
-  }, [selectedStyle, user.name]);
+  }, [selectedStyle, user.name, token]);
 
   const refreshAccessToken = async () => {
     try {
       const refresh_token = localStorage.getItem("spotify_refreshtoken");
       if (!refresh_token) return null;
-      setrefreshtoken(refresh_token);
 
-      const body = new URLSearchParams({
-        client_id: CLIENT_ID,
-        grant_type: "refresh_token",
-        refresh_token,
-      });
+      const body = new URLSearchParams();
+      body.append("grant_type", "refresh_token");
+      body.append("refresh_token", refresh_token);
+      body.append("client_id", CLIENT_ID);
 
       const res = await fetch("https://accounts.spotify.com/api/token", {
         method: "POST",
@@ -69,13 +67,18 @@ export default function Dashboard() {
 
       const data = await res.json();
       if (data.access_token) {
+        const expiresAt = Date.now() + data.expires_in * 1000;
+
         localStorage.setItem("spotify_token", data.access_token);
+        localStorage.setItem("spotify_expires_at", expiresAt.toString());
+
         setToken(data.access_token);
         return data.access_token;
       }
       return null;
     } catch (error) {
       console.log(error);
+      return null;
     }
   };
 
@@ -101,9 +104,8 @@ export default function Dashboard() {
       });
 
       const data = await res.json();
-      console.log(data.refresh_token);
       setToken(data.access_token);
-
+      const expiresAt = Date.now() + data.expires_in * 1000;
       const userRes = await fetch("https://api.spotify.com/v1/me", {
         headers: { Authorization: `Bearer ${data.access_token}` },
       });
@@ -125,6 +127,7 @@ export default function Dashboard() {
       setrefreshtoken(data.refresh_token);
       localStorage.setItem("spotify_token", data.access_token);
       localStorage.setItem("spotify_refreshtoken", data.refresh_token);
+      localStorage.setItem("spotify_expires_at", expiresAt.toString());
       window.history.replaceState({}, document.title, "/dashboard");
     } else {
       const storedToken = localStorage.getItem("spotify_token");
@@ -161,12 +164,27 @@ export default function Dashboard() {
     }
   };
 
-  const getData = async (token: string) => {
-    if (!token) return;
+  const getValidToken = async () => {
+    const storedToken = localStorage.getItem("spotify_token");
+    const expiresAt = parseInt(
+      localStorage.getItem("spotify_expires_at") || "0"
+    );
+
+    if (Date.now() < expiresAt - 60000) {
+      return storedToken;
+    }
+
+    const newToken = await refreshAccessToken();
+    return newToken;
+  };
+
+  const getData = async () => {
+    const tokenToUse = await getValidToken();
+    if (!tokenToUse) return;
 
     try {
       const userRes = await fetch("https://api.spotify.com/v1/me", {
-        headers: { Authorization: `Bearer ${token}` },
+        headers: { Authorization: `Bearer ${tokenToUse}` },
       });
       const userResponse = await userRes.json();
       const newUser = {
@@ -178,7 +196,7 @@ export default function Dashboard() {
       const trackRes = await fetch(
         "https://api.spotify.com/v1/me/player/currently-playing",
         {
-          headers: { Authorization: `Bearer ${token}` },
+          headers: { Authorization: `Bearer ${tokenToUse}` },
         }
       );
 
@@ -187,16 +205,14 @@ export default function Dashboard() {
       } else if (trackRes.status === 401) {
         const newToken = await refreshAccessToken();
         if (newToken) {
-          return getData(newToken);
+          return getData();
         }
       } else {
         const data = await trackRes.json();
         setCurrentTrack(data);
       }
 
-      if (localStorage.getItem("authToken")) {
-        return null;
-      } else {
+      if (!localStorage.getItem("authToken")) {
         const res = await fetch("http://localhost:3001/api/save", {
           method: "POST",
           headers: {
@@ -204,7 +220,7 @@ export default function Dashboard() {
           },
           body: JSON.stringify({
             ...newUser,
-            refreshtoken,
+            refreshtoken: localStorage.getItem("spotify_refreshtoken"),
           }),
         });
         const { authToken } = await res.json();
@@ -216,7 +232,7 @@ export default function Dashboard() {
   };
 
   useEffect(() => {
-    if (token) getData(token);
+    if (token) getData();
   }, [token]);
 
   useEffect(() => {
