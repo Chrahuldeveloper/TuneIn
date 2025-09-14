@@ -25,7 +25,6 @@ interface User {
 
 export default function Dashboard() {
   const [token, setToken] = useState<string | null>(null);
-  const [refreshtoken, setrefreshtoken] = useState<string | null>(null);
   const [user, setUser] = useState<User>({
     name: "",
     email: "",
@@ -124,7 +123,6 @@ export default function Dashboard() {
           email: userResponse.email,
         }),
       });
-      setrefreshtoken(data.refresh_token);
       localStorage.setItem("spotify_token", data.access_token);
       localStorage.setItem("spotify_refreshtoken", data.refresh_token);
       localStorage.setItem("spotify_expires_at", expiresAt.toString());
