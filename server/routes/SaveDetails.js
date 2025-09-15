@@ -2,7 +2,7 @@ const { Router } = require("express");
 const saveDetailsRouter = Router();
 const dbclient = require("../dbconfig/connectDb");
 const jwt = require("jsonwebtoken");
-saveDetailsRouter.post("/api/save", async (req, res) => {
+saveDetailsRouter.post("/save", async (req, res) => {
   try {
     const { name, email, refreshtoken } = req.body;
 
@@ -32,7 +32,7 @@ saveDetailsRouter.post("/api/save", async (req, res) => {
   }
 });
 
-saveDetailsRouter.post("/api/savesong", async (req, res) => {
+saveDetailsRouter.post("/savesong", async (req, res) => {
   try {
     const { email, songDetails } = req.body;
 
@@ -45,7 +45,7 @@ saveDetailsRouter.post("/api/savesong", async (req, res) => {
   }
 });
 
-saveDetailsRouter.post("/api/refresh-token", async (req, res) => {
+saveDetailsRouter.post("/refresh-token", async (req, res) => {
   try {
     const { refreshToken, email } = req.body;
     console.log(email);
@@ -61,7 +61,7 @@ saveDetailsRouter.post("/api/refresh-token", async (req, res) => {
   }
 });
 
-saveDetailsRouter.get("/api/get-new-token", async (req, res) => {
+saveDetailsRouter.get("/get-new-token", async (req, res) => {
   try {
     const { email } = req.query;
 
