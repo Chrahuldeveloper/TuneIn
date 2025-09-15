@@ -1,13 +1,13 @@
 const express = require("express");
+const app = express();
 const db = require("./dbconfig/connectDb");
 const cors = require("cors");
 const saveDetailsRouter = require("./routes/SaveDetails");
 const dotenv = require("dotenv");
 dotenv.config();
-const app = express();
 const PORT = process.env.PORT || 3001; 
-app.use(express.json());
 
+app.use(express.json());
 app.use(cors());
 app.use("/api", saveDetailsRouter);
 

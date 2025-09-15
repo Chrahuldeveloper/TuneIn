@@ -17,7 +17,6 @@ db.query("SELECT NOW()", (err, res) => {
   } else {
     console.error("Connection error", err);
   }
-  db.end();
 });
 
 module.exports = db;
