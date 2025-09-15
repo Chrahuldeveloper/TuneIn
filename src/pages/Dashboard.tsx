@@ -115,7 +115,7 @@ export default function Dashboard() {
       };
       setUser(newUser);
 
-      await fetch("http://localhost:3001/api/refresh-token", {
+      await fetch("https://tunein-sgyj.onrender.com/api/refresh-token", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -145,7 +145,7 @@ export default function Dashboard() {
         albumArt: currentTrack?.item?.album?.images?.[0]?.url,
       };
 
-      await fetch("http://localhost:3001/api/savesong", {
+      await fetch("https://tunein-sgyj.onrender.com/api/savesong", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -211,7 +211,7 @@ export default function Dashboard() {
       }
 
       if (!localStorage.getItem("authToken")) {
-        const res = await fetch("http://localhost:3001/api/save", {
+        const res = await fetch("https://tunein-sgyj.onrender.com/api/save", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

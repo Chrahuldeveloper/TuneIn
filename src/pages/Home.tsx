@@ -83,7 +83,6 @@ export default function Home() {
     }
   }, [token]);
 
-  console.log(token);
 
   return (
     <div className="w-full h-screen overflow-y-none">
