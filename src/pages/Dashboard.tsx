@@ -42,7 +42,7 @@ export default function Dashboard() {
   useEffect(() => {
     if (selectedStyle && user.name) {
       setreadMeLink(
-        `http://127.0.0.1:8000/${btoa(user.name)}/widget/${btoa(
+        `https://tune-in-inky.vercel.app/${btoa(user.name)}/widget/${btoa(
           user.email
         )}/${token}/${selectedStyle}`
       );
