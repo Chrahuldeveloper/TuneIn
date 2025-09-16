@@ -62,7 +62,7 @@ export default function Dashboard() {
 
       const data = await tokenRes.json();
 
-      const { access_token } = data;
+      const { access_token, refreshToken, expiresIn } = data;
 
       if (!access_token) {
         console.log("token not found");
@@ -71,11 +71,10 @@ export default function Dashboard() {
       console.log(access_token);
 
       if (access_token) {
-        const expiresAt = Date.now() + data.expires_in * 1000;
-
-        localStorage.setItem("spotify_token", data.access_token);
+        const expiresAt = Date.now() + expiresIn * 1000;
+        localStorage.setItem("spotify_token", access_token);
+        localStorage.setItem("spotify_refreshtoken", refreshToken);
         localStorage.setItem("spotify_expires_at", expiresAt.toString());
-
         setToken(data.access_token);
         return data.access_token;
       }
