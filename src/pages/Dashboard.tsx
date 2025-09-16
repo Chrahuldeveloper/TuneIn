@@ -53,28 +53,28 @@ export default function Dashboard() {
       const refresh_token = localStorage.getItem("spotify_refreshtoken");
       if (!refresh_token) return null;
 
-      const body = new URLSearchParams();
-      body.append("grant_type", "refresh_token");
-      body.append("refresh_token", refresh_token);
-      body.append("client_id", CLIENT_ID);
+      // const body = new URLSearchParams();
+      // body.append("grant_type", "refresh_token");
+      // body.append("refresh_token", refresh_token);
+      // body.append("client_id", CLIENT_ID);
 
-      const res = await fetch("https://accounts.spotify.com/api/token", {
-        method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: body.toString(),
-      });
+      // const res = await fetch("https://accounts.spotify.com/api/token", {
+      //   method: "POST",
+      //   headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      //   body: body.toString(),
+      // });
 
-      const data = await res.json();
-      if (data.access_token) {
-        const expiresAt = Date.now() + data.expires_in * 1000;
+      // const data = await res.json();
+      // if (data.access_token) {
+      //   const expiresAt = Date.now() + data.expires_in * 1000;
 
-        localStorage.setItem("spotify_token", data.access_token);
-        localStorage.setItem("spotify_expires_at", expiresAt.toString());
+      //   localStorage.setItem("spotify_token", data.access_token);
+      //   localStorage.setItem("spotify_expires_at", expiresAt.toString());
 
-        setToken(data.access_token);
-        return data.access_token;
-      }
-      return null;
+      //   setToken(data.access_token);
+      //   return data.access_token;
+      // }
+      // return null;
     } catch (error) {
       console.log(error);
       return null;

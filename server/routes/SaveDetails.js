@@ -63,9 +63,7 @@ saveDetailsRouter.post("/refresh-token", async (req, res) => {
 
 saveDetailsRouter.get("/get-new-token", async (req, res) => {
   try {
-    const { email } = req.query;
-
-    console.log(email);
+    const email = Object.values(req.query)[0].toString();
 
     console.log(process.env.CLIENT_ID, process.env.CLIENT_SECRET);
 
@@ -82,6 +80,10 @@ saveDetailsRouter.get("/get-new-token", async (req, res) => {
 
     console.log(refresh_token);
 
+    const body = new URLSearchParams();
+    body.append("grant_type", "refresh_token");
+    body.append("refresh_token", refresh_token);
+
     const response = await fetch("https://accounts.spotify.com/api/token", {
       method: "POST",
       headers: {
@@ -92,10 +94,7 @@ saveDetailsRouter.get("/get-new-token", async (req, res) => {
             process.env.CLIENT_ID + ":" + process.env.CLIENT_SECRET
           ).toString("base64"),
       },
-      body: new URLSearchParams({
-        grant_type: "refresh_token",
-        refresh_token,
-      }),
+      body: body.toString(),
     });
 
     const data = await response.json();
