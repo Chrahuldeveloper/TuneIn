@@ -5,6 +5,7 @@ import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism";
 
 const CLIENT_ID = import.meta.env.VITE_CLIENT_ID;
 const REDIRECT_URI = import.meta.env.VITE_REDIRECT_URI;
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 import {
   IoColorPaletteOutline,
@@ -53,28 +54,32 @@ export default function Dashboard() {
       const refresh_token = localStorage.getItem("spotify_refreshtoken");
       if (!refresh_token) return null;
 
-      // const body = new URLSearchParams();
-      // body.append("grant_type", "refresh_token");
-      // body.append("refresh_token", refresh_token);
-      // body.append("client_id", CLIENT_ID);
+      const tokenRes = await fetch(
+        `${BACKEND_URL}/api/get-new-token?email=${user.email}`
+      );
 
-      // const res = await fetch("https://accounts.spotify.com/api/token", {
-      //   method: "POST",
-      //   headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      //   body: body.toString(),
-      // });
+      console.log(await tokenRes.json());
 
-      // const data = await res.json();
-      // if (data.access_token) {
-      //   const expiresAt = Date.now() + data.expires_in * 1000;
+      const data = await tokenRes.json();
 
-      //   localStorage.setItem("spotify_token", data.access_token);
-      //   localStorage.setItem("spotify_expires_at", expiresAt.toString());
+      const { access_token } = data;
 
-      //   setToken(data.access_token);
-      //   return data.access_token;
-      // }
-      // return null;
+      if (!access_token) {
+        console.log("token not found");
+      }
+
+      console.log(access_token);
+
+      if (access_token) {
+        const expiresAt = Date.now() + data.expires_in * 1000;
+
+        localStorage.setItem("spotify_token", data.access_token);
+        localStorage.setItem("spotify_expires_at", expiresAt.toString());
+
+        setToken(data.access_token);
+        return data.access_token;
+      }
+      return null;
     } catch (error) {
       console.log(error);
       return null;
@@ -105,6 +110,7 @@ export default function Dashboard() {
       const data = await res.json();
       setToken(data.access_token);
       const expiresAt = Date.now() + data.expires_in * 1000;
+
       const userRes = await fetch("https://api.spotify.com/v1/me", {
         headers: { Authorization: `Bearer ${data.access_token}` },
       });
@@ -115,17 +121,21 @@ export default function Dashboard() {
       };
       setUser(newUser);
 
-      await fetch("https://tunein-sgyj.onrender.com/api/refresh-token", {
+      await fetch(`${BACKEND_URL}/api/save`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify({
-          refreshToken: data.refresh_token,
-          email: userResponse.email,
+          ...newUser,
+          refreshtoken: data.refresh_token,
         }),
       });
+
       localStorage.setItem("spotify_token", data.access_token);
       localStorage.setItem("spotify_refreshtoken", data.refresh_token);
       localStorage.setItem("spotify_expires_at", expiresAt.toString());
+
       window.history.replaceState({}, document.title, "/dashboard");
     } else {
       const storedToken = localStorage.getItem("spotify_token");
@@ -145,7 +155,7 @@ export default function Dashboard() {
         albumArt: currentTrack?.item?.album?.images?.[0]?.url,
       };
 
-      await fetch("https://tunein-sgyj.onrender.com/api/savesong", {
+      await fetch(`${BACKEND_URL}/api/savesong`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -211,7 +221,7 @@ export default function Dashboard() {
       }
 
       if (!localStorage.getItem("authToken")) {
-        const res = await fetch("https://tunein-sgyj.onrender.com/api/save", {
+        const res = await fetch(`${BACKEND_URL}/api/save`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

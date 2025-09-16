@@ -3,10 +3,11 @@ import react from "@vitejs/plugin-react";
 import mkcert from "vite-plugin-mkcert";
 
 export default defineConfig({
-  plugins: [react(), mkcert()],
+  plugins: [react(), mkcert({source:"coding"})],
   server: {
     host: "127.0.0.1",
     port: 8000,
-    strictPort: true,
+    // strictPort: true,
+    https : true
   },
 });

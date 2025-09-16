@@ -2,6 +2,40 @@ const { Router } = require("express");
 const saveDetailsRouter = Router();
 const dbclient = require("../dbconfig/connectDb");
 const jwt = require("jsonwebtoken");
+
+saveDetailsRouter.get("/login", async (req, res) => {
+  try {
+    const generatecodeVerifier = (length) => {
+      const possible =
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+      const values = crypto.getRandomValues(new Uint8Array(length));
+      return Array.from(values)
+        .map((x) => possible[x % possible.length])
+        .join("");
+    };
+
+    const generateCodeChallenge = async (verifier) => {
+      const encoder = new TextEncoder();
+      const data = encoder.encode(verifier);
+      const hash = await crypto.subtle.digest("SHA-256", data);
+      return btoa(String.fromCharCode(...new Uint8Array(hash)))
+        .replace(/\+/g, "-")
+        .replace(/\//g, "_")
+        .replace(/=+$/, "");
+    };
+
+    const codeVerifier = generatecodeVerifier(64);
+    const codeChallenge = await generateCodeChallenge(codeVerifier);
+
+    return res.json({
+      codeVerifier: codeVerifier,
+      codeChallenge: codeChallenge,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+});
+
 saveDetailsRouter.post("/save", async (req, res) => {
   try {
     const { name, email, refreshtoken } = req.body;
@@ -13,7 +47,6 @@ saveDetailsRouter.post("/save", async (req, res) => {
     }
 
     const JWT_SECRET = "CMRCET-KI-MAA-KI-CHUT";
-
     const queryResult = await dbclient.query("SELECT * FROM users;");
     console.log(queryResult.rows);
 
@@ -78,8 +111,6 @@ saveDetailsRouter.get("/get-new-token", async (req, res) => {
 
     const refresh_token = result.rows[0].refreshtoken;
 
-    console.log(refresh_token);
-
     const body = new URLSearchParams();
     body.append("grant_type", "refresh_token");
     body.append("refresh_token", refresh_token);
@@ -99,13 +130,20 @@ saveDetailsRouter.get("/get-new-token", async (req, res) => {
 
     const data = await response.json();
 
-    console.log(data);
+    await dbclient.query(
+      "UPDATE users SET refreshtoken = $1 WHERE email = $2",
+      [data.refresh_token, email]
+    );
 
     if (data.error) {
       return res.status(400).json({ error: data.error });
     }
 
-    return res.json({ accessToken: data.access_token });
+    return res.json({
+      accessToken: data.access_token,
+      refreshToken: data.refresh_token,
+      expiresIn: data.expires_in,
+    });
   } catch (error) {
     console.log("❌ Error refreshing token:", error);
     res.status(500).json({ error: "Server error" });

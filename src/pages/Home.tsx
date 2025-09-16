@@ -8,38 +8,20 @@ import { Link } from "react-router-dom";
 const CLIENT_ID = import.meta.env.VITE_CLIENT_ID;
 const REDIRECT_URI = import.meta.env.VITE_REDIRECT_URI;
 const AUTH_ENDPOINT = "https://accounts.spotify.com/authorize";
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
-// Read https://developer.spotify.com/documentation/web-api/reference/get-the-users-currently-playing-track
 var SCOPE =
   "user-read-private user-read-email user-read-recently-played user-read-currently-playing";
 
 export default function Home() {
   const [token, setToken] = useState<string | null>(null);
 
-  // Read : https://developer.spotify.com/documentation/web-api/tutorials/code-pkce-flowda
-  const generatecodeVerifier = (length: number) => {
-    const possible =
-      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-    const values = crypto.getRandomValues(new Uint8Array(length));
-    return Array.from(values)
-      .map((x) => possible[x % possible.length])
-      .join("");
-  };
-
-  // Read : https://developer.spotify.com/documentation/web-api/tutorials/code-pkce-flow
-  const generateCodeChallenge = async (verifier: string) => {
-    const encoder = new TextEncoder();
-    const data = encoder.encode(verifier);
-    const hash = await crypto.subtle.digest("SHA-256", data);
-    return btoa(String.fromCharCode(...new Uint8Array(hash)))
-      .replace(/\+/g, "-")
-      .replace(/\//g, "_")
-      .replace(/=+$/, "");
-  };
-
   const handleLogin = async () => {
-    const codeVerifier = generatecodeVerifier(64);
-    const codeChallenge = await generateCodeChallenge(codeVerifier);
+    const getCodeVerifier = await fetch(`${BACKEND_URL}/api/login`);
+
+    const { codeVerifier, codeChallenge } = await getCodeVerifier.json();
+
+    console.log(codeVerifier, codeChallenge);
 
     localStorage.setItem("code_verifier", codeVerifier);
     localStorage.removeItem("spotify_token");
@@ -71,7 +53,8 @@ export default function Home() {
           Authorization: `Bearer ${token}`,
         },
       });
-      await getUser.json();
+      const res = await getUser.json();
+      console.log(res);
     } catch (error) {
       console.log(error);
     }
@@ -82,7 +65,6 @@ export default function Home() {
       getData(token?.toString());
     }
   }, [token]);
-
 
   return (
     <div className="w-full h-screen overflow-y-none">
