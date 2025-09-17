@@ -45,10 +45,10 @@ saveDetailsRouter.get("/get-user-email", async (req, res) => {
       [refreshToken]
     );
 
-    const res = await userEmail.rows[0].email
+    const result = await userEmail.rows[0].email
 
     return res.json({
-      userEmail: userEmail,
+      result: result,
     });
   } catch (error) {
     console.log(error);
