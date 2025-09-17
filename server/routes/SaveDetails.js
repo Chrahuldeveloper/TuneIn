@@ -40,7 +40,7 @@ saveDetailsRouter.get("/get-user-email", async (req, res) => {
   try {
     const { refreshToken } = req.body;
 
-    const userEmail = dbclient.query(
+    const userEmail = await dbclient.query(
       "SELECT email FROM users WHERE refreshtoken = $1",
       [refreshToken]
     );
