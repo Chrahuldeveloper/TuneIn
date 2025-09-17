@@ -36,6 +36,23 @@ saveDetailsRouter.get("/login", async (req, res) => {
   }
 });
 
+saveDetailsRouter.get("/get-user-email", async (req, res) => {
+  try {
+    const { refreshToken } = req.body;
+
+    const userEmail = dbclient.query(
+      "SELECT email FROM users WHERE refreshtoken = $1",
+      [refreshToken]
+    );
+
+    return res.json({
+      userEmail: userEmail,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+});
+
 saveDetailsRouter.post("/save", async (req, res) => {
   try {
     const { name, email, refreshtoken } = req.body;

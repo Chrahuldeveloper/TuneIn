@@ -54,6 +54,9 @@ export default function Dashboard() {
       const refresh_token = localStorage.getItem("spotify_refreshtoken");
       if (!refresh_token) return null;
 
+      // get user email first from the backend
+      console.log(user.email);
+
       const tokenRes = await fetch(
         `${BACKEND_URL}/api/get-new-token?email=${user.email}`
       );
