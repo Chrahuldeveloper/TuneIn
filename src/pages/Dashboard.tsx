@@ -55,7 +55,9 @@ export default function Dashboard() {
       if (!refresh_token) return null;
 
       // get user email first from the backend
-      const getUserEmail = await fetch(`${BACKEND_URL}/api/get-user-email`);
+      const getUserEmail = await fetch(
+        `${BACKEND_URL}/api/get-user-email?refreshToken=${refresh_token}`
+      );
 
       const { result } = await getUserEmail.json();
 
