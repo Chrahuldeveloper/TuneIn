@@ -45,6 +45,8 @@ saveDetailsRouter.get("/get-user-email", async (req, res) => {
       [refreshToken]
     );
 
+    const res = await userEmail.rows[0].email
+
     return res.json({
       userEmail: userEmail,
     });
