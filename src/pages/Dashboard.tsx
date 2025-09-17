@@ -50,44 +50,47 @@ export default function Dashboard() {
   }, [selectedStyle, user.name, token]);
 
   const refreshAccessToken = async () => {
+    console.log("running");
     try {
       const refresh_token = localStorage.getItem("spotify_refreshtoken");
+      console.log(refresh_token)
       if (!refresh_token) return null;
 
-      // get user email first from the backend
       const getUserEmail = await fetch(
         `${BACKEND_URL}/api/get-user-email?refreshToken=${refresh_token}`
       );
 
-      const { result } = await getUserEmail.json();
+      
+      const  resdata = await getUserEmail.json();
+      
+      console.log(resdata)
+      // console.log(result);
 
-      console.log(result);
+      // const tokenRes = await fetch(
+      //   `${BACKEND_URL}/api/get-new-token?email=${result}`
+      // );
 
-      const tokenRes = await fetch(
-        `${BACKEND_URL}/api/get-new-token?email=${result}`
-      );
+      // const data = await tokenRes.json();
 
-      const data = await tokenRes.json();
+      // console.log(data);
 
-      console.log(data);
+      // const { accessToken, refreshToken, expiresIn } = data;
 
-      const { accessToken, refreshToken, expiresIn } = data;
+      // if (!accessToken) {
+      //   console.log("token not found");
+      // }
 
-      if (!accessToken) {
-        console.log("token not found");
-      }
+      // console.log(accessToken);
 
-      console.log(accessToken);
-
-      if (accessToken) {
-        const expiresAt = Date.now() + expiresIn * 1000;
-        localStorage.setItem("spotify_token", accessToken);
-        localStorage.setItem("spotify_refreshtoken", refreshToken);
-        localStorage.setItem("spotify_expires_at", expiresAt.toString());
-        setToken(data.access_token);
-        return data.access_token;
-      }
-      return null;
+      // if (accessToken) {
+      //   const expiresAt = Date.now() + expiresIn * 1000;
+      //   localStorage.setItem("spotify_token", accessToken);
+      //   localStorage.setItem("spotify_refreshtoken", refreshToken);
+      //   localStorage.setItem("spotify_expires_at", expiresAt.toString());
+      //   setToken(data.access_token);
+      //   return data.access_token;
+      // }
+      // return null;
     } catch (error) {
       console.log(error);
       return null;
@@ -129,7 +132,7 @@ export default function Dashboard() {
       };
       setUser(newUser);
 
-      await fetch(`${BACKEND_URL}/api/save`, {
+     const userToken =  await fetch(`${BACKEND_URL}/api/save`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -140,6 +143,9 @@ export default function Dashboard() {
         }),
       });
 
+
+      const { authToken } = await userToken.json()
+      localStorage.setItem("authToken",authToken)
       localStorage.setItem("spotify_token", data.access_token);
       localStorage.setItem("spotify_refreshtoken", data.refresh_token);
       localStorage.setItem("spotify_expires_at", expiresAt.toString());
@@ -186,9 +192,9 @@ export default function Dashboard() {
       localStorage.getItem("spotify_expires_at") || "0"
     );
 
-    if (Date.now() < expiresAt - 60000) {
-      return storedToken;
-    }
+    // if (Date.now() < expiresAt - 60000) {
+    //   return storedToken;
+    // }
 
     const newToken = await refreshAccessToken();
     return newToken;
@@ -240,6 +246,7 @@ export default function Dashboard() {
           }),
         });
         const { authToken } = await res.json();
+        console.log(authToken)
         localStorage.setItem("authToken", authToken);
       }
     } catch (error) {
