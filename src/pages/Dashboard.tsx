@@ -58,21 +58,21 @@ export default function Dashboard() {
         `${BACKEND_URL}/api/get-new-token?email=${user.email}`
       );
 
-      console.log(await tokenRes.json());
-
       const data = await tokenRes.json();
 
-      const { access_token, refreshToken, expiresIn } = data;
+      console.log(data);
 
-      if (!access_token) {
+      const { accessToken, refreshToken, expiresIn } = data;
+
+      if (!accessToken) {
         console.log("token not found");
       }
 
-      console.log(access_token);
+      console.log(accessToken);
 
-      if (access_token) {
+      if (accessToken) {
         const expiresAt = Date.now() + expiresIn * 1000;
-        localStorage.setItem("spotify_token", access_token);
+        localStorage.setItem("spotify_token", accessToken);
         localStorage.setItem("spotify_refreshtoken", refreshToken);
         localStorage.setItem("spotify_expires_at", expiresAt.toString());
         setToken(data.access_token);
