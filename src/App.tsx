@@ -3,6 +3,7 @@ import Home from "./pages/Home";
 import Dashboard from "./pages/Dashboard";
 import Widget from "./pages/Widget";
 import View from "./pages/View";
+import About from "./pages/About";
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
         element={<Widget />}
         path="/:username/widget/:id/:token/:widgetname"
       />
+      <Route element={<About />} path="/about" />
     </Routes>
   );
 }
