@@ -12,8 +12,18 @@ const config: Config = {
         background: "var(--background)",
         foreground: "var(--foreground)",
       },
+      keyframes: {
+        barBounce: {
+          "0%, 100%": { transform: "scaleY(0.3)" },
+          "50%": { transform: "scaleY(1)" },
+        },
+      },
+      animation: {
+        bar: "barBounce 1s infinite ease-in-out",
+      },
     },
   },
   plugins: [],
 };
+
 export default config;
