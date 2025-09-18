@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { IoPauseOutline } from "react-icons/io5";
 import { FaRegHeart } from "react-icons/fa";
 import { MdSkipNext } from "react-icons/md";
@@ -11,8 +11,12 @@ interface CurrentTrack {
   albumArt: string;
 }
 
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+
 export default function Widget() {
-  const { widgetname, id, token } = useParams();
+  const { username, widgetname, id, token } = useParams();
+
+  const navigate = useNavigate();
 
   const [currentTrack, setcurrentTrack] = useState<CurrentTrack>({
     trackName: "",
@@ -20,13 +24,14 @@ export default function Widget() {
     albumArt: "",
   });
 
+  const [currentToken, setCurrentToken] = useState<string | undefined>(token);
+
   const trackName = currentTrack.trackName;
   const artistName = currentTrack.artistName;
   const albumArt = currentTrack.albumArt;
 
-  // if the token gets exp then fetch new one from the db easy and update the link
-
   const fetchCurrentTrack = async () => {
+    if (!currentToken) return;
     try {
       const trackRes = await fetch(
         "https://api.spotify.com/v1/me/player/currently-playing",
@@ -38,19 +43,27 @@ export default function Widget() {
       if (trackRes.status === 401) {
         console.log("⚠️ Token expired, getting new one...");
 
-        const refreshRes = await fetch(
-          `http://localhost:3001/api/get-new-token?email=${atob(id!)}`
+        const getNewToken = await fetch(
+          `${BACKEND_URL}/api/get-new-token?email=${atob(id!)}`
         );
 
-        const refreshData = await refreshRes.json();
-        if (refreshData.accessToken) {
-          const newToken = refreshData.accessToken;
+        const { accessToken } = await getNewToken.json();
+        if (accessToken) {
+          setCurrentToken(accessToken);
+
+          // Update token in URL so the widget can be shared with new token
+          // /:username/widget/:id/:token/:widgetname
+          navigate(`/${username}/widget/${id}/${accessToken}/${widgetname}`, {
+            replace: true,
+          });
+
           const retryRes = await fetch(
             "https://api.spotify.com/v1/me/player/currently-playing",
             {
-              headers: { Authorization: `Bearer ${newToken}` },
+              headers: { Authorization: `Bearer ${accessToken}` },
             }
           );
+
           if (retryRes.ok) {
             const song = await retryRes.json();
             setcurrentTrack({
@@ -61,12 +74,15 @@ export default function Widget() {
             });
           }
         }
+
         return;
       }
+
       if (trackRes.status === 204) {
         console.log("No track currently playing");
         return;
       }
+
       const song = await trackRes.json();
       setcurrentTrack({
         trackName: song?.item?.name || "",
