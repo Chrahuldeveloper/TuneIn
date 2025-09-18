@@ -452,18 +452,43 @@ export default function Dashboard() {
               <FaRegCopy
                 cursor={"pointer"}
                 onClick={() => {
-                  copyLink(`
-                     <iframe
-                      src=${readMeLink}
-                      width="400"
-                      height="120"
-                      style={{
-                      border: "none",
-                      borderRadius: "12px",
-                      overflow: "hidden",
-                      }}
-                      ></iframe>
+                  if (selectedStyle === "waveform") {
+                    copyLink(`
+                    src=${readMeLink}
+                    style="border: none; border-radius: 12px; overflow: hidden;"
+                    scrolling="no"
+                    width="380px"
+                    height="200px"
+                    allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                    loading="lazy"
+                  ></iframe>
+
                     `);
+                  } else if (selectedStyle === "banner") {
+                    copyLink(`
+                        <iframe                                                
+                        src=${readMeLink}
+                        style="border: none; border-radius: 12px; overflow: hidden;"
+                        scrolling="no"
+                        width="380px"
+                        height="180px"
+                        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                        loading="lazy"
+                        ></iframe>
+                      `);
+                  } else {
+                    copyLink(`
+                       <iframe                                                
+                        src=${readMeLink}
+                        style="border: none; border-radius: 12px; overflow: hidden;"
+                        scrolling="no"
+                        width="380px"
+                        height="110px"
+                        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                        loading="lazy"
+                        ></iframe>
+                      `);
+                  }
                 }}
               />
             </div>
