@@ -160,7 +160,7 @@ export default function Dashboard() {
         const newToken = await refreshAccessToken();
         if (newToken) {
           setToken(newToken);
-          scheduleTokenRefresh(); 
+          scheduleTokenRefresh();
         }
       }, refreshTime);
 
@@ -288,8 +288,11 @@ export default function Dashboard() {
   src="${readMeLink}"
   width="400"
   height="120"
-  style="border:none; border-radius:12px; overflow:hidden;"
-></iframe>`;
+ style={{
+          border: "none",
+          borderRadius: "12px",
+          overflow: "hidden",
+        }}></iframe>`;
 
   const renderPreview = () => {
     if (!selectedStyle) {
@@ -434,7 +437,11 @@ export default function Dashboard() {
                       src=${readMeLink}
                       width="400"
                       height="120"
-                      style="border:none; border-radius:12px; overflow:hidden;"
+                       style={{
+          border: "none",
+          borderRadius: "12px",
+          overflow: "hidden",
+        }}
                       ></iframe>
                     `);
                 }}

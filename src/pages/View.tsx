@@ -2,9 +2,14 @@ export default function View() {
   return (
     <div className="p-10">
       <iframe
-        src="http://127.0.0.1:8000/UmFodWw=/widget/cmNoNTUzMzYwQGdtYWlsLmNvbQ==/BQAf8gtkEEXKq9mgAhvtnB5SomHlulSU6hZ7fSPj-JJ9r03WkVAznpsEdg5NzuTC3MsI8hyHrS7ATKT9ztypJxPmlRGQBlTZF6EnAsJzAphQw_EzqRL6nb_puki6wiS7A8ozG_ubpNLWFtNv3vWscqiD7mG9m60pwhmPAX5nd4v1Fd2yU1dlds0iWavakmvp5kgaQ4z1yNieL3p59ThZHPkCxdxpTT2jv8e5N5cW8q40VUJ_rEMWijCgjW3qQC8Jg1Udnhw/compact "
+        src="https://tune-in-inky.vercel.app/UmFodWw=/widget/cmNoNTUzMzYwQGdtYWlsLmNvbQ==/BQCtpQp2LePeDQ0i4DsR54wyR_LKCrPSwrDl8oO8vf3LGsw8FS3CXUoNmbjw-XiuzE_8TK1SSbhgvxDPsCfZ8t-b2pwvsY9VVNYzjYgB8tEsmqRvffArHF0O4nd1B1zsfoyRFFihNB9VkNSY67I-9yHUZlGcdHv_fAqUm0fs85YBytTAg3-bpj7JF0sGV-MYcfdhkpyCSS1yh6OxACjhlB80UrvXn5vtOjQF1cOlzn5fxnNhq0ZbqS39M47_GslVYHG7OFCRDZrUQlqlu-Po/compact"
         width="400"
         height="120"
+        style={{
+          border: "none",
+          borderRadius: "12px",
+          overflow: "hidden",
+        }}
       ></iframe>
     </div>
   );
