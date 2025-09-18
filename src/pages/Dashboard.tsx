@@ -251,7 +251,7 @@ export default function Dashboard() {
 
   useEffect(() => {
     if (token) getData();
-  }, [token]);
+  }, [token,readMeLink]);
 
   useEffect(() => {
     saveCurrentSong();
