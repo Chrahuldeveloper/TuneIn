@@ -206,8 +206,8 @@ export default function Widget() {
   };
 
   return (
-    <div className="w-screen p-10 h-[100vh] bg-[#111216]">
-      <div>{renderWidget()}</div>
+    <div className="flex flex-col items-center justify-center min-h-screen bg-[#111216]">
+      {renderWidget()}
     </div>
   );
 }
