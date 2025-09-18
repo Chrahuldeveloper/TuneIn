@@ -375,36 +375,55 @@ export default function Dashboard() {
 
     if (selectedStyle === "waveform") {
       return (
-        <div className="bg-[#1f2228] p-4 rounded-lg w-96 p-5 shawdow-xl">
-          <div className="flex items-center  space-x-5">
-            <img
-              src={albumArt}
-              alt={trackName}
-              className="w-12 h-12 rounded-md"
-            />
-            <div>
-              <h3 className="text-white font-semibold">{trackName}</h3>
-              <p className="text-[#989fab] text-sm">{artistName}</p>
+        <>
+          <style>
+            {`
+            @keyframes barBounce {
+              0%, 100% { transform: scaleY(0.3); }
+              50% { transform: scaleY(1); }
+            }
+  `}
+          </style>
+
+          <div className="bg-[#1f2228] p-4 rounded-lg w-96 p-5 shawdow-xl">
+            <div className="flex items-center  space-x-5">
+              <img
+                src={albumArt}
+                alt={trackName}
+                className="w-12 h-12 rounded-md"
+              />
+              <div>
+                <h3 className="text-white font-semibold">{trackName}</h3>
+                <p className="text-[#989fab] text-sm">{artistName}</p>
+              </div>
+            </div>
+
+            <div className="mt-4 flex items-end space-x-1.5 h-16 justify-center">
+              {Array.from({ length: 30 }).map((_, i) => {
+                const duration = 0.6 + Math.random() * 0.6;
+                const delay = Math.random() * 0.5;
+                return (
+                  <div
+                    key={i}
+                    className="w-2 bg-green-500 rounded"
+                    style={{
+                      height: "100%",
+                      transformOrigin: "bottom",
+                      animation: `barBounce ${duration}s ${delay}s infinite ease-in-out`,
+                    }}
+                  />
+                );
+              })}
+            </div>
+            <div className="flex justify-center my-6">
+              <IoPauseOutline
+                size={30}
+                color="black"
+                className="bg-green-500 p-1  rounded-lg"
+              />
             </div>
           </div>
-
-          <div className="mt-4 flex items-end space-x-1.5 h-16 justify-center">
-            {Array.from({ length: 30 }).map((_, i) => (
-              <div
-                key={i}
-                className="w-2 bg-green-500 rounded animate-bar"
-      style={{ animationDelay: `${i * 0.2}s` }}
-              />
-            ))}
-          </div>
-          <div className="flex justify-center my-6">
-            <IoPauseOutline
-              size={30}
-              color="black"
-              className="bg-green-500 p-1  rounded-lg"
-            />
-          </div>
-        </div>
+        </>
       );
     }
   };
