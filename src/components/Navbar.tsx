@@ -38,20 +38,24 @@ export default function Navbar() {
 
         <div className="hidden md:block">
           <ul className="font-semibold space-x-9 flex items-center text-white">
-            <li className="cursor-pointer flex items-center space-x-3">
-              <CiHome size={23} />
-              <p>Home</p>
-            </li>
+            <Link to={"/"}>
+              <li className="cursor-pointer flex items-center space-x-3">
+                <CiHome size={23} />
+                <p>Home</p>
+              </li>
+            </Link>
             <Link to={"/dashboard"}>
               <li className="cursor-pointer flex items-center space-x-3">
                 <LuLayoutDashboard size={23} />
                 <p>DashBoard</p>
               </li>
             </Link>
-            <li className="cursor-pointer flex items-center space-x-3">
-              <CgProfile size={23} />
-              <p>About</p>
-            </li>
+            <Link to={"/about"}>
+              <li className="cursor-pointer flex items-center space-x-3">
+                <CgProfile size={23} />
+                <p>About</p>
+              </li>
+            </Link>
           </ul>
         </div>
       </div>
@@ -71,18 +75,24 @@ export default function Navbar() {
               ✕
             </button>
 
-            <div className="flex items-center space-x-3 text-white">
-              <CiHome size={23} />
-              <p>Home</p>
-            </div>
-            <div className="flex items-center space-x-3 text-white">
-              <LuLayoutDashboard size={23} />
-              <p>DashBoard</p>
-            </div>
-            <div className="flex items-center space-x-3 text-white">
-              <CgProfile size={23} />
-              <p>About</p>
-            </div>
+            <Link to={"/"}>
+              <div className="flex items-center space-x-3 text-white">
+                <CiHome size={23} />
+                <p>Home</p>
+              </div>
+            </Link>
+            <Link to={"/dashboard"}>
+              <div className="flex items-center space-x-3 text-white">
+                <LuLayoutDashboard size={23} />
+                <p>DashBoard</p>
+              </div>
+            </Link>
+            <Link to={"/about"}>
+              <div className="flex items-center space-x-3 text-white">
+                <CgProfile size={23} />
+                <p>About</p>
+              </div>
+            </Link>
           </div>
         </>
       )}
