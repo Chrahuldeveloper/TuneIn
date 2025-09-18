@@ -24,6 +24,8 @@ export default function Widget() {
   const artistName = currentTrack.artistName;
   const albumArt = currentTrack.albumArt;
 
+  // if the token gets exp then fetch new one from the db easy and update the link
+
   const fetchCurrentTrack = async () => {
     try {
       const trackRes = await fetch(

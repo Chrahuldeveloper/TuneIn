@@ -60,6 +60,8 @@ export default function Dashboard() {
 
       const { result } = await getUserEmail.json();
 
+      console.log(result);
+
       const tokenRes = await fetch(
         `${BACKEND_URL}/api/get-new-token?email=${result}`
       );
@@ -284,16 +286,38 @@ export default function Dashboard() {
     }
   };
 
-  const codeString = `<iframe
-  src="${readMeLink}"
-  width="400"
-  height="120"
-  style={{
-  border: "none",
-  borderRadius: "12px",
-  overflow: "hidden",
-  }}
-  ></iframe>`;
+  const codeString =
+    selectedStyle === "banner" ? 
+`<iframe                                                
+ src=${readMeLink}
+ style="border: none; border-radius: 12px; overflow: hidden;"
+ scrolling="no"
+ width="380px"
+ height="180px"
+ allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+ loading="lazy"
+ ></iframe>
+`
+      : selectedStyle === "waveform"? `
+<iframe                                                
+src=${readMeLink}
+style="border: none; border-radius: 12px; overflow: hidden;"
+scrolling="no"
+width="380px"
+height="200px"
+allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+loading="lazy"
+></iframe>`
+      : `                       
+<iframe                                                
+src=${readMeLink}
+style="border: none; border-radius: 12px; overflow: hidden;"
+scrolling="no"
+width="380px"
+height="110px"
+allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+loading="lazy"
+></iframe>`;
 
   const renderPreview = () => {
     if (!selectedStyle) {
@@ -454,6 +478,7 @@ export default function Dashboard() {
                 onClick={() => {
                   if (selectedStyle === "waveform") {
                     copyLink(`
+                     <iframe                                                
                     src=${readMeLink}
                     style="border: none; border-radius: 12px; overflow: hidden;"
                     scrolling="no"
@@ -594,3 +619,4 @@ export default function Dashboard() {
     </div>
   );
 }
+
