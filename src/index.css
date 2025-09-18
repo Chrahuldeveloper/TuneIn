@@ -1,0 +1,17 @@
+::-webkit-scrollbar{
+    display: none;
+}
+
+
+@keyframes bounceBar {
+  0%, 100% {
+    height: 10px;
+  }
+  50% {
+    height: 60px;
+  }
+}
+
+.animate-bar {
+  animation: bounceBar infinite ease-in-out;
+}

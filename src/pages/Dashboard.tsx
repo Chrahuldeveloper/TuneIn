@@ -288,11 +288,12 @@ export default function Dashboard() {
   src="${readMeLink}"
   width="400"
   height="120"
- style={{
-          border: "none",
-          borderRadius: "12px",
-          overflow: "hidden",
-        }}></iframe>`;
+  style={{
+  border: "none",
+  borderRadius: "12px",
+  overflow: "hidden",
+  }}
+  ></iframe>`;
 
   const renderPreview = () => {
     if (!selectedStyle) {
@@ -391,16 +392,19 @@ export default function Dashboard() {
             {Array.from({ length: 30 }).map((_, i) => (
               <div
                 key={i}
-                className="w-2 bg-green-500 rounded"
-                style={{ height: `${Math.random() * 40 + 10}px` }}
+                className="w-2 bg-green-500 rounded animate-bar"
+                style={{
+                  animationDuration: `${0.5 + Math.random()}s`,
+                  animationDelay: `${Math.random()}s`,
+                }}
               />
             ))}
           </div>
-          <div className="flex justify-center mt-6">
+          <div className="flex justify-center my-6">
             <IoPauseOutline
               size={30}
               color="black"
-              className="bg-green-500 p-1 rounded-lg"
+              className="bg-green-500 p-1  rounded-lg"
             />
           </div>
         </div>
@@ -437,11 +441,11 @@ export default function Dashboard() {
                       src=${readMeLink}
                       width="400"
                       height="120"
-                       style={{
-          border: "none",
-          borderRadius: "12px",
-          overflow: "hidden",
-        }}
+                      style={{
+                      border: "none",
+                      borderRadius: "12px",
+                      overflow: "hidden",
+                      }}
                       ></iframe>
                     `);
                 }}
