@@ -50,10 +50,8 @@ export default function Dashboard() {
   }, [selectedStyle, user.name, token]);
 
   const refreshAccessToken = async () => {
-    console.log("running");
     try {
       const refresh_token = localStorage.getItem("spotify_refreshtoken");
-      console.log(refresh_token);
       if (!refresh_token) return null;
 
       const getUserEmail = await fetch(
@@ -67,24 +65,15 @@ export default function Dashboard() {
       );
 
       const data = await tokenRes.json();
-
-      console.log(data);
-
       const { accessToken, refreshToken, expiresIn } = data;
-
-      if (!accessToken) {
-        console.log("token not found");
-      }
-
-      console.log(accessToken);
 
       if (accessToken) {
         const expiresAt = Date.now() + expiresIn * 1000;
         localStorage.setItem("spotify_token", accessToken);
         localStorage.setItem("spotify_refreshtoken", refreshToken);
         localStorage.setItem("spotify_expires_at", expiresAt.toString());
-        setToken(data.access_token);
-        return data.access_token;
+        setToken(accessToken);
+        return accessToken;
       }
       return null;
     } catch (error) {
@@ -155,6 +144,33 @@ export default function Dashboard() {
   useEffect(() => {
     getToken();
   }, []);
+
+  useEffect(() => {
+    const scheduleTokenRefresh = () => {
+      const expiresAt = parseInt(
+        localStorage.getItem("spotify_expires_at") || "0"
+      );
+      if (!expiresAt) return;
+
+      const now = Date.now();
+      const timeLeft = expiresAt - now;
+      const refreshTime = timeLeft > 60000 ? timeLeft - 60000 : 0;
+
+      const timer = setTimeout(async () => {
+        const newToken = await refreshAccessToken();
+        if (newToken) {
+          setToken(newToken);
+          scheduleTokenRefresh(); 
+        }
+      }, refreshTime);
+
+      return () => clearTimeout(timer);
+    };
+
+    if (token) {
+      scheduleTokenRefresh();
+    }
+  }, [token]);
 
   const saveCurrentSong = async () => {
     try {
@@ -241,7 +257,6 @@ export default function Dashboard() {
           }),
         });
         const { authToken } = await res.json();
-        console.log(authToken);
         localStorage.setItem("authToken", authToken);
       }
     } catch (error) {
@@ -251,7 +266,7 @@ export default function Dashboard() {
 
   useEffect(() => {
     if (token) getData();
-  }, [token,readMeLink]);
+  }, [token, readMeLink]);
 
   useEffect(() => {
     saveCurrentSong();
@@ -509,7 +524,7 @@ export default function Dashboard() {
                   <div>
                     <h2 className="text-white font-semibold">Waveform</h2>
                     <p className="text-[#989fab] text-sm">
-                      Animated audio visualization
+                      Animated bars for visualization
                     </p>
                   </div>
                 </div>
@@ -517,19 +532,13 @@ export default function Dashboard() {
               </div>
             </div>
 
-            <div className="bg-[#1a1b20] rounded-lg border border-[#2a2d34] p-4 flex flex-col justify-start space-y-8">
-              <div className="flex items-center space-x-3.5">
-                <IoColorPaletteOutline size={25} color="#00a63e" />
-                <h1 className="text-white font-semibold">Live Preview</h1>
-              </div>
-              <div className="flex justify-center items-center min-h-[200px]">
-                {renderPreview()}
-              </div>
+            <div className="flex justify-center items-center bg-[#1f2228] p-5 rounded-lg">
+              {renderPreview()}
             </div>
           </div>
         </div>
       </div>
-      {isCopied ? <PopUp /> : null}
+      {isCopied && <PopUp />}
     </div>
   );
 }
