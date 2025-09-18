@@ -393,10 +393,7 @@ export default function Dashboard() {
               <div
                 key={i}
                 className="w-2 bg-green-500 rounded animate-bar"
-                style={{
-                  animationDuration: `${0.5 + Math.random()}s`,
-                  animationDelay: `${Math.random()}s`,
-                }}
+      style={{ animationDelay: `${i * 0.2}s` }}
               />
             ))}
           </div>
