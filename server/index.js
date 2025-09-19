@@ -14,11 +14,12 @@ app.use("/api", saveDetailsRouter);
 const createUsersTable = async () => {
   try {
     const query = `
-      CREATE TABLE IF NOT EXISTS users (
+    CREATE TABLE IF NOT EXISTS users (
     id SERIAL PRIMARY KEY,
     name TEXT NOT NULL,
     email TEXT UNIQUE NOT NULL,
     refreshToken TEXT,
+    authToken TEXT,
     current_song JSONB,
     created_at TIMESTAMP DEFAULT NOW()
       );

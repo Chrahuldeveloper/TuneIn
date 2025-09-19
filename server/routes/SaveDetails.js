@@ -38,21 +38,15 @@ saveDetailsRouter.get("/login", async (req, res) => {
 
 saveDetailsRouter.get("/get-user-email", async (req, res) => {
   try {
-    const { refreshToken } = req.query;
-
+    const { authToken } = req.query;
     const userEmail = await dbclient.query(
-      "SELECT email FROM users WHERE refreshtoken = $1",
-      [refreshToken]
+      "SELECT email FROM users WHERE authToken = $1",
+      [authToken]
     );
-
-
-        if (userEmail.rows.length === 0) {
+    if (userEmail.rows.length === 0) {
       return res.status(404).json({ error: "User not found" });
     }
-
-
     const result = userEmail.rows[0].email;
-
     return res.json({ result });
   } catch (error) {
     console.log(error);
@@ -73,14 +67,15 @@ saveDetailsRouter.post("/save", async (req, res) => {
     const queryResult = await dbclient.query("SELECT * FROM users;");
     console.log(queryResult.rows);
 
-    await dbclient.query(
-      `INSERT INTO users (name, email,refreshtoken) VALUES ($1, $2,$3)`,
-      [name, email, refreshtoken]
-    );
-
     const authToken = jwt.sign({ email: email }, JWT_SECRET, {
       expiresIn: "7d",
     });
+
+    await dbclient.query(
+      `INSERT INTO users (name, email,refreshtoken,authToken) VALUES ($1, $2,$3,$4)`,
+      [name, email, refreshtoken, authToken]
+    );
+
     return res.json({ authToken });
   } catch (error) {
     console.error("❌ Error saving user:", error);
@@ -103,12 +98,12 @@ saveDetailsRouter.post("/savesong", async (req, res) => {
 
 saveDetailsRouter.post("/refresh-token", async (req, res) => {
   try {
-    const { refreshToken, email } = req.body;
-    console.log(email);
+    const { refreshToken, authToken } = req.body;
+    console.log(authToken);
     console.log(refreshToken);
     await dbclient.query(
-      "UPDATE users SET refreshToken = $1 WHERE email = $2",
-      [refreshToken, email]
+      "UPDATE users SET refreshToken = $1 WHERE authToken = $2",
+      [refreshToken, authToken]
     );
 
     return res.json({ message: "token saved" });

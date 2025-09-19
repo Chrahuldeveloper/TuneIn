@@ -51,11 +51,11 @@ export default function Dashboard() {
 
   const refreshAccessToken = async () => {
     try {
-      const refresh_token = localStorage.getItem("spotify_refreshtoken");
-      if (!refresh_token) return null;
+      const auth_Token = localStorage.getItem("authToken");
+      if (!auth_Token) return null;
 
       const getUserEmail = await fetch(
-        `${BACKEND_URL}/api/get-user-email?refreshToken=${refresh_token}`
+        `${BACKEND_URL}/api/get-user-email?refreshToken=${auth_Token}`
       );
 
       const { result } = await getUserEmail.json();
@@ -274,9 +274,6 @@ export default function Dashboard() {
     saveCurrentSong();
   }, [currentTrack]);
 
-
-
-
   const copyLink = async (data: any) => {
     try {
       setisCopied(true);
@@ -290,8 +287,8 @@ export default function Dashboard() {
   };
 
   const codeString =
-    selectedStyle === "banner" ? 
-`<iframe                                                
+    selectedStyle === "banner"
+      ? `<iframe                                                
  src=${readMeLink}
  style="border: none; border-radius: 12px; overflow: hidden;"
  scrolling="no"
@@ -301,7 +298,8 @@ export default function Dashboard() {
  loading="lazy"
  ></iframe>
 `
-      : selectedStyle === "waveform"? `
+      : selectedStyle === "waveform"
+      ? `
 <iframe                                                
 src=${readMeLink}
 style="border: none; border-radius: 12px; overflow: hidden;"
