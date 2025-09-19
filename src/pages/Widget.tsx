@@ -47,12 +47,12 @@ export default function Widget() {
           `${BACKEND_URL}/api/get-new-token?email=${atob(id!)}`
         );
 
-        const { accessToken } = await getNewToken.json();
+        const { accessToken, refreshToken } = await getNewToken.json();
         if (accessToken) {
           setCurrentToken(accessToken);
+          localStorage.setItem("spotify_token", accessToken);
+          localStorage.setItem("spotify_refreshtoken", refreshToken);
 
-          // Update token in URL so the widget can be shared with new token
-          // /:username/widget/:id/:token/:widgetname
           navigate(`/${username}/widget/${id}/${accessToken}/${widgetname}`, {
             replace: true,
           });
