@@ -74,7 +74,6 @@ export default function Widget() {
             });
           }
         }
-
         return;
       }
 
@@ -206,13 +205,7 @@ export default function Widget() {
                 );
               })}
             </div>
-            <div className="flex justify-center my-6">
-              <IoPauseOutline
-                size={30}
-                color="black"
-                className="bg-green-500 p-1  rounded-lg"
-              />
-            </div>
+           
           </div>
         </div>
       );
