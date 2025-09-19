@@ -8,10 +8,11 @@ dotenv.config();
 const PORT = process.env.PORT || 3001; 
 
 app.use(express.json());
-cors({
+app.use(cors({
   origin: "https://tune-in-inky.vercel.app",
   credentials: true
-}))
+}));
+
 app.use("/api", saveDetailsRouter);
 
 const createUsersTable = async () => {
