@@ -165,7 +165,7 @@ export default function Widget() {
 
     if (widgetname === "waveform") {
       return (
-        <div className="w-[380px] h-[200px] rounded-xl shadow-md overflow-hidden bg-[#181818] ">
+        <div className="w-[380px] h-[210px] rounded-xl shadow-md overflow-hidden bg-[#181818] ">
           <style>
             {`
             @keyframes barBounce {
