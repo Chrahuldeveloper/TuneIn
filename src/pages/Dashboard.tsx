@@ -52,10 +52,11 @@ export default function Dashboard() {
   const refreshAccessToken = async () => {
     try {
       const auth_Token = localStorage.getItem("authToken");
+      console.log(auth_Token)
       if (!auth_Token) return null;
 
       const getUserEmail = await fetch(
-        `${BACKEND_URL}/api/get-user-email?refreshToken=${auth_Token}`
+        `${BACKEND_URL}/api/get-user-email?authToken=${auth_Token}`
       );
 
       const { result } = await getUserEmail.json();
