@@ -274,6 +274,9 @@ export default function Dashboard() {
     saveCurrentSong();
   }, [currentTrack]);
 
+
+
+
   const copyLink = async (data: any) => {
     try {
       setisCopied(true);
@@ -619,4 +622,3 @@ loading="lazy"
     </div>
   );
 }
-

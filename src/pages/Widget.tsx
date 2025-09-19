@@ -36,7 +36,7 @@ export default function Widget() {
       const trackRes = await fetch(
         "https://api.spotify.com/v1/me/player/currently-playing",
         {
-          headers: { Authorization: `Bearer ${token}` },
+          headers: { Authorization: `Bearer ${currentToken}` }, // ✅ use state, not raw param
         }
       );
 
@@ -52,10 +52,6 @@ export default function Widget() {
           setCurrentToken(accessToken);
           localStorage.setItem("spotify_token", accessToken);
           localStorage.setItem("spotify_refreshtoken", refreshToken);
-
-          navigate(`/${username}/widget/${id}/${accessToken}/${widgetname}`, {
-            replace: true,
-          });
 
           const retryRes = await fetch(
             "https://api.spotify.com/v1/me/player/currently-playing",
@@ -73,6 +69,10 @@ export default function Widget() {
                 song?.item?.artists?.map((a: any) => a.name).join(", ") || "",
             });
           }
+
+          navigate(`/${username}/widget/${id}/${accessToken}/${widgetname}`, {
+            replace: true,
+          });
         }
         return;
       }
@@ -93,6 +93,70 @@ export default function Widget() {
       console.log("❌ Error fetching track:", error);
     }
   };
+
+  // const fetchCurrentTrack = async () => {
+  //   if (!currentToken) return;
+  //   try {
+  //     const trackRes = await fetch(
+  //       "https://api.spotify.com/v1/me/player/currently-playing",
+  //       {
+  //         headers: { Authorization: `Bearer ${token}` },
+  //       }
+  //     );
+
+  //     if (trackRes.status === 401) {
+  //       console.log("⚠️ Token expired, getting new one...");
+
+  //       const getNewToken = await fetch(
+  //         `${BACKEND_URL}/api/get-new-token?email=${atob(id!)}`
+  //       );
+
+  //       const { accessToken, refreshToken } = await getNewToken.json();
+  //       if (accessToken) {
+  //         setCurrentToken(accessToken);
+  //         localStorage.setItem("spotify_token", accessToken);
+  //         localStorage.setItem("spotify_refreshtoken", refreshToken);
+
+  //         navigate(`/${username}/widget/${id}/${accessToken}/${widgetname}`, {
+  //           replace: true,
+  //         });
+
+  //         const retryRes = await fetch(
+  //           "https://api.spotify.com/v1/me/player/currently-playing",
+  //           {
+  //             headers: { Authorization: `Bearer ${accessToken}` },
+  //           }
+  //         );
+
+  //         if (retryRes.ok) {
+  //           const song = await retryRes.json();
+  //           setcurrentTrack({
+  //             trackName: song?.item?.name || "",
+  //             albumArt: song?.item?.album?.images?.[0]?.url || "",
+  //             artistName:
+  //               song?.item?.artists?.map((a: any) => a.name).join(", ") || "",
+  //           });
+  //         }
+  //       }
+  //       return;
+  //     }
+
+  //     if (trackRes.status === 204) {
+  //       console.log("No track currently playing");
+  //       return;
+  //     }
+
+  //     const song = await trackRes.json();
+  //     setcurrentTrack({
+  //       trackName: song?.item?.name || "",
+  //       albumArt: song?.item?.album?.images?.[0]?.url || "",
+  //       artistName:
+  //         song?.item?.artists?.map((a: any) => a.name).join(", ") || "",
+  //     });
+  //   } catch (error) {
+  //     console.log("❌ Error fetching track:", error);
+  //   }
+  // };
 
   useEffect(() => {
     fetchCurrentTrack();
@@ -205,7 +269,6 @@ export default function Widget() {
                 );
               })}
             </div>
-           
           </div>
         </div>
       );
