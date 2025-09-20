@@ -1,5 +1,7 @@
 # 🎵 TuneIn
 
+![TuneIn Demo](./assets/video.mp4)
+
 TuneIn is a web app that connects with Spotify to show your currently playing track, recent activity, and playlists. Perfect for embedding in your GitHub README or portfolio!
 
 ## Features
