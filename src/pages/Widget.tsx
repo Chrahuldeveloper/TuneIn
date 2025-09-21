@@ -32,11 +32,11 @@ export default function Widget() {
   const artistName = currentTrack.artistName;
   const albumArt = currentTrack.albumArt;
 
- const fetchCurrentTrack = async () => {
+  const fetchCurrentTrack = async (showLoader = false) => {
   if (!currentToken) return;
 
   try {
-    setisloading(true);
+    if (showLoader) setisloading(true); 
 
     const trackRes = await fetch(
       "https://api.spotify.com/v1/me/player/currently-playing",
@@ -47,6 +47,8 @@ export default function Widget() {
 
     if (trackRes.status === 401) {
       console.log("⚠️ Token expired, getting new one...");
+
+      if (showLoader) setisloading(true);
 
       const getNewToken = await fetch(
         `${BACKEND_URL}/api/get-new-token?email=${atob(id!)}`
@@ -80,13 +82,13 @@ export default function Widget() {
         });
       }
 
-      setisloading(false);
+      if (showLoader) setisloading(false);
       return;
     }
 
     if (trackRes.status === 204) {
       console.log("No track currently playing");
-      setisloading(false); 
+      if (showLoader) setisloading(false);
       return;
     }
 
@@ -98,18 +100,18 @@ export default function Widget() {
         song?.item?.artists?.map((a: any) => a.name).join(", ") || "",
     });
 
-    setisloading(false); 
+    if (showLoader) setisloading(false);
   } catch (error) {
     console.log("❌ Error fetching track:", error);
-    setisloading(false); 
+    if (showLoader) setisloading(false);
   }
 };
 
-  useEffect(() => {
-    fetchCurrentTrack();
-    const interval = setInterval(fetchCurrentTrack, 10000);
-    return () => clearInterval(interval);
-  }, [token, id]);
+useEffect(() => {
+  fetchCurrentTrack(true);
+  const interval = setInterval(() => fetchCurrentTrack(false), 10000);
+  return () => clearInterval(interval);
+}, [token, id]);
 
   const renderWidget = () => {
     if (widgetname === "compact") {
