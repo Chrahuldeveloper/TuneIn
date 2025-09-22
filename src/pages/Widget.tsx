@@ -140,6 +140,32 @@ useEffect(() => {
               className="bg-green-500 p-1 rounded-lg"
             />
           </div>
+
+                    {isloading && (
+            <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#181818]/70 backdrop-blur-xl">
+              {/* Loader */}
+              <div className="flex space-x-2 mb-3">
+                <div className="w-3 h-3 rounded-full bg-green-500 animate-pulse"></div>
+                <div
+                  className="w-3 h-3 rounded-full bg-green-500"
+                  style={{ animation: "pulse 1.2s infinite 0.2s" }}
+                ></div>
+                <div
+                  className="w-3 h-3 rounded-full bg-green-500"
+                  style={{ animation: "pulse 1.2s infinite 0.4s" }}
+                ></div>
+              </div>
+
+              {/* Text */}
+              <p
+                className="text-white text-lg font-medium tracking-wide"
+                style={{ animation: "fadeIn 0.6s ease-in-out forwards" }}
+              >
+                Fetching current song…
+              </p>
+            </div>
+          )}
+
         </div>
       );
     }
@@ -172,6 +198,33 @@ useEffect(() => {
             <MdSkipNext size={20} color="white" />
             <p className="font-semibold text-green-500">Spotify</p>
           </div>
+
+
+                    {isloading && (
+            <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#181818]/70 backdrop-blur-xl">
+              {/* Loader */}
+              <div className="flex space-x-2 mb-3">
+                <div className="w-3 h-3 rounded-full bg-green-500 animate-pulse"></div>
+                <div
+                  className="w-3 h-3 rounded-full bg-green-500"
+                  style={{ animation: "pulse 1.2s infinite 0.2s" }}
+                ></div>
+                <div
+                  className="w-3 h-3 rounded-full bg-green-500"
+                  style={{ animation: "pulse 1.2s infinite 0.4s" }}
+                ></div>
+              </div>
+
+              {/* Text */}
+              <p
+                className="text-white text-lg font-medium tracking-wide"
+                style={{ animation: "fadeIn 0.6s ease-in-out forwards" }}
+              >
+                Fetching current song…
+              </p>
+            </div>
+          )}
+
         </div>
       );
     }
