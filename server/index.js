@@ -9,7 +9,7 @@ const PORT = process.env.PORT || 3001;
 
 app.use(express.json());
 app.use(cors({
-  origin: "https://tune-in-inky.vercel.app",
+  origin: "https://spotifytunein.vercel.app",
   credentials: true
 }));
 
