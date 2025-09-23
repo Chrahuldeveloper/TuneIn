@@ -86,11 +86,10 @@ export default function Home() {
             </h1>
             <p className="max-w-2xl text-xl md:text-2xl mx-auto font-semibold text-[#9ea9ae]">
               Generate beautiful widgets to display your currently playing track
-              or recent Spotify activity on your GitHub README, portfolio, or
-              anywhere else.
+              or recent Spotify activity on your, portfolio,
             </p>
 
-            <div className="flex justify-center items-center space-x-5">
+            <div className="flex justify-center flex-col md:flex-row items-center md:space-x-5 space-y-5 md:space-y-0 ">
               {!token ? (
                 <button
                   onClick={handleLogin}
@@ -108,15 +107,17 @@ export default function Home() {
                 </Link>
               )}
 
-              <button className="bg-gray-800 text-white px-6 py-3 rounded-lg text-xl font-semibold transition flex items-center space-x-3 cursor-pointer">
-                <FaGithub size={24} />
-                <span>View on Github</span>
-              </button>
+              <Link to={"https://github.com/Chrahuldeveloper/TuneIn"}>
+                <button className="bg-gray-800 text-white px-6 py-3 rounded-lg text-xl font-semibold transition flex items-center space-x-3 cursor-pointer">
+                  <FaGithub size={24} />
+                  <span>View on Github</span>
+                </button>
+              </Link>
             </div>
           </div>
           <div>
             <h1 className="text-xl font-semibold md:text-2xl text-center text-white ">
-              See it in action on a GitHub README
+              See it in action on a Portfolio
             </h1>
             <Readme />
           </div>
