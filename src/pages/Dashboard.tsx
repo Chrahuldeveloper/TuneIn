@@ -39,7 +39,7 @@ export default function Dashboard() {
 
   const [isCopied, setisCopied] = useState<boolean>(false);
 
-  const [isloading, setisloading] = useState<boolean>(true);
+  const [isloading, setisloading] = useState<boolean>(false);
 
   useEffect(() => {
     if (selectedStyle && user.name) {
