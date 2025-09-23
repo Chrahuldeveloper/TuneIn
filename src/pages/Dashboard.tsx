@@ -53,7 +53,6 @@ export default function Dashboard() {
 
   const refreshAccessToken = async () => {
     try {
-      setisloading(true);
       const auth_Token = localStorage.getItem("authToken");
       console.log(auth_Token);
       if (!auth_Token) return null;
@@ -81,7 +80,6 @@ export default function Dashboard() {
         setToken(accessToken);
         return accessToken;
       }
-      setisloading(false);
       return null;
     } catch (error) {
       console.log(error);
@@ -91,7 +89,6 @@ export default function Dashboard() {
   };
 
   const getToken = async () => {
-    setisloading(true);
     const params = new URLSearchParams(window.location.search);
     const code = params.get("code");
 
@@ -144,11 +141,9 @@ export default function Dashboard() {
       localStorage.setItem("spotify_expires_at", expiresAt.toString());
 
       window.history.replaceState({}, document.title, "/dashboard");
-      setisloading(false);
     } else {
       const storedToken = localStorage.getItem("spotify_token");
       if (storedToken) setToken(storedToken);
-      setisloading(false);
     }
   };
 
