@@ -44,7 +44,7 @@ export default function Dashboard() {
   useEffect(() => {
     if (selectedStyle && user.name) {
       setreadMeLink(
-        `https://tune-in-inky.vercel.app/${btoa(user.name)}/widget/${btoa(
+        `https://spotifytunein.vercel.app/${btoa(user.name)}/widget/${btoa(
           user.email
         )}/${token}/${selectedStyle}`
       );
@@ -53,6 +53,7 @@ export default function Dashboard() {
 
   const refreshAccessToken = async () => {
     try {
+      setisloading(true);
       const auth_Token = localStorage.getItem("authToken");
       console.log(auth_Token);
       if (!auth_Token) return null;
@@ -80,6 +81,7 @@ export default function Dashboard() {
         setToken(accessToken);
         return accessToken;
       }
+      setisloading(false);
       return null;
     } catch (error) {
       console.log(error);
@@ -221,7 +223,6 @@ export default function Dashboard() {
     if (!tokenToUse) return;
 
     try {
-      setisloading(true);
       const userRes = await fetch("https://api.spotify.com/v1/me", {
         headers: { Authorization: `Bearer ${tokenToUse}` },
       });
@@ -265,10 +266,8 @@ export default function Dashboard() {
         const { authToken } = await res.json();
         localStorage.setItem("authToken", authToken);
       }
-      setisloading(false);
     } catch (error) {
       console.error(error);
-      setisloading(false);
     }
   };
 
@@ -461,30 +460,28 @@ loading="lazy"
 
   return (
     <div className="w-full h-screen overflow-y-none">
+      {isloading && (
+        <div className="fixed inset-0 z-50 flex flex-col items-center justify-center h-screen bg-[#181818]/70 backdrop-blur-xl">
+          <div className="flex space-x-2 mb-3">
+            <div className="w-3 h-3 rounded-full bg-green-500 animate-pulse"></div>
+            <div
+              className="w-3 h-3 rounded-full bg-green-500"
+              style={{ animation: "pulse 1.2s infinite 0.2s" }}
+            ></div>
+            <div
+              className="w-3 h-3 rounded-full bg-green-500"
+              style={{ animation: "pulse 1.2s infinite 0.4s" }}
+            ></div>
+          </div>
 
-                    {isloading && (
-            <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#181818]/70 backdrop-blur-xl">
-              <div className="flex space-x-2 mb-3">
-                <div className="w-3 h-3 rounded-full bg-green-500 animate-pulse"></div>
-                <div
-                  className="w-3 h-3 rounded-full bg-green-500"
-                  style={{ animation: "pulse 1.2s infinite 0.2s" }}
-                ></div>
-                <div
-                  className="w-3 h-3 rounded-full bg-green-500"
-                  style={{ animation: "pulse 1.2s infinite 0.4s" }}
-                ></div>
-              </div>
-
-              {/* Text */}
-              <p
-                className="text-white text-lg font-medium tracking-wide"
-                style={{ animation: "fadeIn 0.6s ease-in-out forwards" }}
-              >
-                Fetching current song…
-              </p>
-            </div>
-          )}
+          <p
+            className="text-white text-lg font-medium tracking-wide"
+            style={{ animation: "fadeIn 0.6s ease-in-out forwards" }}
+          >
+            Fetching current song…
+          </p>
+        </div>
+      )}
 
       <div className=" bg-[#111216] h-[110vh] overflow-y-none">
         <Navbar />
