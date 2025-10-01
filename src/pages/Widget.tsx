@@ -27,6 +27,7 @@ export default function Widget() {
   const [currentToken, setCurrentToken] = useState<string | undefined>(token);
 
   const [isloading, setisloading] = useState<boolean>(true);
+  const [isNoSong, setisNoSong] = useState<boolean>(false);
 
   const trackName = currentTrack.trackName;
   const artistName = currentTrack.artistName;
@@ -70,6 +71,9 @@ export default function Widget() {
           if (retryRes.ok) {
             const song = await retryRes.json();
             console.log("curr song ", song);
+            if (song === null) {
+              setisNoSong(true);
+            }
             setcurrentTrack({
               trackName: song?.item?.name || "",
               albumArt: song?.item?.album?.images?.[0]?.url || "",
@@ -168,6 +172,35 @@ export default function Widget() {
           )}
         </div>
       );
+    }
+
+    {
+      isNoSong ? (
+        <>
+          <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#181818]/70 backdrop-blur-xl">
+            {/* Loader */}
+            <div className="flex space-x-2 mb-3">
+              <div className="w-3 h-3 rounded-full bg-green-500 animate-pulse"></div>
+              <div
+                className="w-3 h-3 rounded-full bg-green-500"
+                style={{ animation: "pulse 1.2s infinite 0.2s" }}
+              ></div>
+              <div
+                className="w-3 h-3 rounded-full bg-green-500"
+                style={{ animation: "pulse 1.2s infinite 0.4s" }}
+              ></div>
+            </div>
+
+            {/* Text */}
+            <p
+              className="text-white text-lg font-medium tracking-wide"
+              style={{ animation: "fadeIn 0.6s ease-in-out forwards" }}
+            >
+              No Song Playing…
+            </p>
+          </div>
+        </>
+      ) : null;
     }
 
     if (widgetname === "banner") {
