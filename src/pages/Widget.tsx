@@ -177,10 +177,23 @@ export default function Widget() {
 
     if (widgetname === "waveform") {
       return (
-        <div className="relative w-[380px] h-[170px] rounded-xl shadow-md overflow-hidden bg-[#181818]">
-          <div className="bg-[#1f2228] p-5 rounded-lg w-96">
-            <div className="flex items-center space-x-5">
-              <img src={albumArt} alt={trackName} className="w-12 h-12 rounded-md" />
+        <>
+          <style>
+            {`
+            @keyframes barBounce {
+              0%, 100% { transform: scaleY(0.3); }
+              50% { transform: scaleY(1); }
+            }
+  `}
+          </style>
+
+          <div className="bg-[#1f2228] p-4 rounded-lg w-96 p-5 shawdow-xl">
+            <div className="flex items-center  space-x-5">
+              <img
+                src={albumArt}
+                alt={trackName}
+                className="w-12 h-12 rounded-md"
+              />
               <div>
                 <h3 className="text-white font-semibold">{trackName}</h3>
                 <p className="text-[#989fab] text-sm">{artistName}</p>
@@ -204,8 +217,15 @@ export default function Widget() {
                 );
               })}
             </div>
+            <div className="flex justify-center my-6">
+              <IoPauseOutline
+                size={30}
+                color="black"
+                className="bg-green-500 p-1  rounded-lg"
+              />
+            </div>
           </div>
-        </div>
+        </>
       );
     }
 
