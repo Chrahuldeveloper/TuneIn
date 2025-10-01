@@ -151,7 +151,11 @@ export default function Widget() {
       return (
         <div className="bg-[#1f2228] p-5 rounded-lg w-96 shadow-xl">
           <div className="flex items-center space-x-4">
-            <img src={albumArt} alt={trackName} className="w-16 h-16 rounded-lg" />
+            <img
+              src={albumArt}
+              alt={trackName}
+              className="w-16 h-16 rounded-lg"
+            />
             <div>
               <div className="text-green-500 text-xs mb-1 flex items-center space-x-2">
                 <CiMusicNote1 size={20} color="#00a63e" />
@@ -229,16 +233,14 @@ export default function Widget() {
       );
     }
 
-    return <p className="text-red-500 font-semibold">Unknown widget: {widgetname}</p>;
+    return (
+      <p className="text-red-500 font-semibold">Unknown widget: {widgetname}</p>
+    );
   };
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-[#111216]">
-      {isloading ? (
-        <p className="text-white">Loading…</p>
-      ) : (
-        renderWidget()
-      )}
+      {isloading ? <p className="text-white">Loading…</p> : renderWidget()}
     </div>
   );
 }
