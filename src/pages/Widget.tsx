@@ -33,85 +33,86 @@ export default function Widget() {
   const albumArt = currentTrack.albumArt;
 
   const fetchCurrentTrack = async (showLoader = false) => {
-  if (!currentToken) return;
+    if (!currentToken) return;
 
-  try {
-    if (showLoader) setisloading(true); 
-
-    const trackRes = await fetch(
-      "https://api.spotify.com/v1/me/player/currently-playing",
-      {
-        headers: { Authorization: `Bearer ${currentToken}` },
-      }
-    );
-
-    if (trackRes.status === 401) {
-      console.log("⚠️ Token expired, getting new one...");
-
+    try {
       if (showLoader) setisloading(true);
 
-      const getNewToken = await fetch(
-        `${BACKEND_URL}/api/get-new-token?email=${atob(id!)}`
+      const trackRes = await fetch(
+        "https://api.spotify.com/v1/me/player/currently-playing",
+        {
+          headers: { Authorization: `Bearer ${currentToken}` },
+        }
       );
 
-      const { accessToken, refreshToken } = await getNewToken.json();
-      if (accessToken) {
-        setCurrentToken(accessToken);
-        localStorage.setItem("spotify_token", accessToken);
-        localStorage.setItem("spotify_refreshtoken", refreshToken);
+      if (trackRes.status === 401) {
+        console.log("⚠️ Token expired, getting new one...");
 
-        const retryRes = await fetch(
-          "https://api.spotify.com/v1/me/player/currently-playing",
-          {
-            headers: { Authorization: `Bearer ${accessToken}` },
-          }
+        if (showLoader) setisloading(true);
+
+        const getNewToken = await fetch(
+          `${BACKEND_URL}/api/get-new-token?email=${atob(id!)}`
         );
 
-        if (retryRes.ok) {
-          const song = await retryRes.json();
-          setcurrentTrack({
-            trackName: song?.item?.name || "",
-            albumArt: song?.item?.album?.images?.[0]?.url || "",
-            artistName:
-              song?.item?.artists?.map((a: any) => a.name).join(", ") || "",
+        const { accessToken, refreshToken } = await getNewToken.json();
+        if (accessToken) {
+          setCurrentToken(accessToken);
+          localStorage.setItem("spotify_token", accessToken);
+          localStorage.setItem("spotify_refreshtoken", refreshToken);
+
+          const retryRes = await fetch(
+            "https://api.spotify.com/v1/me/player/currently-playing",
+            {
+              headers: { Authorization: `Bearer ${accessToken}` },
+            }
+          );
+
+          if (retryRes.ok) {
+            const song = await retryRes.json();
+            console.log("curr song ", song);
+            setcurrentTrack({
+              trackName: song?.item?.name || "",
+              albumArt: song?.item?.album?.images?.[0]?.url || "",
+              artistName:
+                song?.item?.artists?.map((a: any) => a.name).join(", ") || "",
+            });
+          }
+
+          navigate(`/${username}/widget/${id}/${accessToken}/${widgetname}`, {
+            replace: true,
           });
         }
 
-        navigate(`/${username}/widget/${id}/${accessToken}/${widgetname}`, {
-          replace: true,
-        });
+        if (showLoader) setisloading(false);
+        return;
       }
 
+      if (trackRes.status === 204) {
+        console.log("No track currently playing");
+        if (showLoader) setisloading(false);
+        return;
+      }
+
+      const song = await trackRes.json();
+      setcurrentTrack({
+        trackName: song?.item?.name || "",
+        albumArt: song?.item?.album?.images?.[0]?.url || "",
+        artistName:
+          song?.item?.artists?.map((a: any) => a.name).join(", ") || "",
+      });
+
       if (showLoader) setisloading(false);
-      return;
-    }
-
-    if (trackRes.status === 204) {
-      console.log("No track currently playing");
+    } catch (error) {
+      console.log("❌ Error fetching track:", error);
       if (showLoader) setisloading(false);
-      return;
     }
+  };
 
-    const song = await trackRes.json();
-    setcurrentTrack({
-      trackName: song?.item?.name || "",
-      albumArt: song?.item?.album?.images?.[0]?.url || "",
-      artistName:
-        song?.item?.artists?.map((a: any) => a.name).join(", ") || "",
-    });
-
-    if (showLoader) setisloading(false);
-  } catch (error) {
-    console.log("❌ Error fetching track:", error);
-    if (showLoader) setisloading(false);
-  }
-};
-
-useEffect(() => {
-  fetchCurrentTrack(true);
-  const interval = setInterval(() => fetchCurrentTrack(false), 10000);
-  return () => clearInterval(interval);
-}, [token, id]);
+  useEffect(() => {
+    fetchCurrentTrack(true);
+    const interval = setInterval(() => fetchCurrentTrack(false), 10000);
+    return () => clearInterval(interval);
+  }, [token, id]);
 
   const renderWidget = () => {
     if (widgetname === "compact") {
@@ -141,7 +142,7 @@ useEffect(() => {
             />
           </div>
 
-                    {isloading && (
+          {isloading && (
             <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#181818]/70 backdrop-blur-xl">
               {/* Loader */}
               <div className="flex space-x-2 mb-3">
@@ -165,7 +166,6 @@ useEffect(() => {
               </p>
             </div>
           )}
-
         </div>
       );
     }
@@ -199,8 +199,7 @@ useEffect(() => {
             <p className="font-semibold text-green-500">Spotify</p>
           </div>
 
-
-                    {isloading && (
+          {isloading && (
             <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#181818]/70 backdrop-blur-xl">
               {/* Loader */}
               <div className="flex space-x-2 mb-3">
@@ -224,7 +223,6 @@ useEffect(() => {
               </p>
             </div>
           )}
-
         </div>
       );
     }
