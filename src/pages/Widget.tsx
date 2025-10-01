@@ -89,7 +89,7 @@ export default function Widget() {
 
       if (trackRes.status === 204) {
         console.log("No track currently playing");
-          setisNoSong(true);
+        setisNoSong(true);
         if (showLoader) setisloading(false);
         return;
       }
@@ -116,7 +116,36 @@ export default function Widget() {
   }, [token, id]);
 
   const renderWidget = () => {
-    if (widgetname === "compact") {
+    {
+      isNoSong ? (
+        <>
+          <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#181818]/70 backdrop-blur-xl">
+            {/* Loader */}
+            <div className="flex space-x-2 mb-3">
+              <div className="w-3 h-3 rounded-full bg-green-500 animate-pulse"></div>
+              <div
+                className="w-3 h-3 rounded-full bg-green-500"
+                style={{ animation: "pulse 1.2s infinite 0.2s" }}
+              ></div>
+              <div
+                className="w-3 h-3 rounded-full bg-green-500"
+                style={{ animation: "pulse 1.2s infinite 0.4s" }}
+              ></div>
+            </div>
+
+            {/* Text */}
+            <p
+              className="text-white text-lg font-medium tracking-wide"
+              style={{ animation: "fadeIn 0.6s ease-in-out forwards" }}
+            >
+              No Song Playing…
+            </p>
+          </div>
+        </>
+      ) : null;
+    }
+
+    if (widgetname === "compact" && !isNoSong) {
       return (
         <div className="bg-[#1f2228]  p-4 rounded-lg w-96 flex justify-between items-center shadow-xl">
           <div>
@@ -171,36 +200,7 @@ export default function Widget() {
       );
     }
 
-    {
-      isNoSong ? (
-        <>
-          <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#181818]/70 backdrop-blur-xl">
-            {/* Loader */}
-            <div className="flex space-x-2 mb-3">
-              <div className="w-3 h-3 rounded-full bg-green-500 animate-pulse"></div>
-              <div
-                className="w-3 h-3 rounded-full bg-green-500"
-                style={{ animation: "pulse 1.2s infinite 0.2s" }}
-              ></div>
-              <div
-                className="w-3 h-3 rounded-full bg-green-500"
-                style={{ animation: "pulse 1.2s infinite 0.4s" }}
-              ></div>
-            </div>
-
-            {/* Text */}
-            <p
-              className="text-white text-lg font-medium tracking-wide"
-              style={{ animation: "fadeIn 0.6s ease-in-out forwards" }}
-            >
-              No Song Playing…
-            </p>
-          </div>
-        </>
-      ) : null;
-    }
-
-    if (widgetname === "banner") {
+    if (widgetname === "banner" && !isNoSong) {
       return (
         <div className="bg-[#1f2228] p-5 rounded-lg w-96 shadow-xl">
           <div className="flex items-center space-x-4">
@@ -257,7 +257,7 @@ export default function Widget() {
       );
     }
 
-    if (widgetname === "waveform") {
+    if (widgetname === "waveform" && !isNoSong) {
       return (
         <div className="relative w-[380px] h-[170px] rounded-xl shadow-md overflow-hidden bg-[#181818]">
           <style>
