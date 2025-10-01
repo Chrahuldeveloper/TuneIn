@@ -4,7 +4,6 @@ import { Navbar, Readme } from "../components";
 import { FaGithub } from "react-icons/fa";
 import bg from "../assets/bg.png";
 import { Link } from "react-router-dom";
-import { MdSettingsSuggest } from "react-icons/md";
 
 const CLIENT_ID = import.meta.env.VITE_CLIENT_ID;
 const REDIRECT_URI = import.meta.env.VITE_REDIRECT_URI;
