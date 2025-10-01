@@ -70,10 +70,6 @@ export default function Widget() {
 
           if (retryRes.ok) {
             const song = await retryRes.json();
-            console.log("curr song ", song);
-            if (song === null) {
-              setisNoSong(true);
-            }
             setcurrentTrack({
               trackName: song?.item?.name || "",
               albumArt: song?.item?.album?.images?.[0]?.url || "",
@@ -93,6 +89,7 @@ export default function Widget() {
 
       if (trackRes.status === 204) {
         console.log("No track currently playing");
+          setisNoSong(true);
         if (showLoader) setisloading(false);
         return;
       }
