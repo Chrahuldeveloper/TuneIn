@@ -14,8 +14,8 @@ interface CurrentTrack {
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 export default function Widget() {
-  const { username, widgetname, id, token } = useParams();
   const navigate = useNavigate();
+  const { username, widgetname, id, token } = useParams();
 
   const [currentTrack, setcurrentTrack] = useState<CurrentTrack>({
     trackName: "",
@@ -60,8 +60,6 @@ export default function Widget() {
           navigate(`/${username}/widget/${id}/${accessToken}/${widgetname}`, {
             replace: true,
           });
-
-          return fetchCurrentTrack(showLoader);
         }
 
         if (showLoader) setisloading(false);
@@ -240,7 +238,30 @@ export default function Widget() {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-[#111216]">
-      {isloading ? <p className="text-white">Loading…</p> : renderWidget()}
+      {isloading ? (
+        <div className="fixed inset-0 z-50 flex flex-col items-center justify-center h-screen bg-[#181818]/70 backdrop-blur-xl">
+          <div className="flex space-x-2 mb-3">
+            <div className="w-3 h-3 rounded-full bg-green-500 animate-pulse"></div>
+            <div
+              className="w-3 h-3 rounded-full bg-green-500"
+              style={{ animation: "pulse 1.2s infinite 0.2s" }}
+            ></div>
+            <div
+              className="w-3 h-3 rounded-full bg-green-500"
+              style={{ animation: "pulse 1.2s infinite 0.4s" }}
+            ></div>
+          </div>
+
+          <p
+            className="text-white text-lg font-medium tracking-wide"
+            style={{ animation: "fadeIn 0.6s ease-in-out forwards" }}
+          >
+            Fetching current song…
+          </p>
+        </div>
+      ) : (
+        renderWidget()
+      )}
     </div>
   );
 }
