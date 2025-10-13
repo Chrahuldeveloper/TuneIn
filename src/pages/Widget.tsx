@@ -96,7 +96,7 @@ export default function Widget() {
   }, [token, id]);
 
   const renderNoSong = () => (
-    <div className="bg-[#1f2228] p-6 rounded-lg w-96 flex flex-col items-center justify-center shadow-xl text-center">
+    <div className="bg-[#1f2228] p-6 rounded-lg w-96 h-full flex flex-col items-center justify-center shadow-xl text-center">
       <div className="flex space-x-2 mb-3">
         <div className="w-3 h-3 rounded-full bg-green-500 animate-pulse"></div>
         <div
